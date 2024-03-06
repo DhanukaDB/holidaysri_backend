@@ -4,12 +4,14 @@ const  mongoose = require('mongoose');
 require("dotenv").config();
 
 const userRouter = require("./routes/User-routes");
+const productItemRouter = require("./routes/productItemRoute");
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/user",userRouter);
+app.use("/productItem" ,productItemRouter);
 
 app.use('/api/auth', require('./routes/authenticationRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
