@@ -4,6 +4,7 @@ const Guide = require("../models/Guide");
 const Partner = require("../models/Partner");
 const Agent = require("../models/Agent");
 const Seller = require("../models/Seller");
+const sendEmail = require('../utils/sendEmail'); // Utility to send email
 
 
 exports.registerUser = async (req, res, next) => {
@@ -410,6 +411,77 @@ exports.sellerLogin = async (req, res, next) => {
   }
 };
 
+exports.forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'No user found with that email' });
+    }
+
+    // Generate reset token
+    const resetToken = user.getResetPasswordToken();
+
+    // Save token to the database
+    await user.save();
+
+    // Create reset URL
+    const resetUrl = `${req.protocol}://${req.get('host')}/passwordreset/${resetToken}`;
+
+    // Send email
+    const message = `
+      <h1>You have requested a password reset</h1>
+      <p>Please go to this link to reset your password:</p>
+      <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
+    `;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset Request',
+      text: message
+    });
+
+    res.status(200).json({ success: true, data: 'Email sent' });
+
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    return res.status(500).json({ success: false, error: 'Email could not be sent' });
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: 'Invalid Token' });
+    }
+
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({ success: true, data: 'Password Reset Success' });
+
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Could not reset password' });
+  }
+};
+
+
 const sendToken = (user, statusCode, res, email) => {
   const token = user.getSignedToken();
   res.status(statusCode).json({ success: true, token, user, email });
@@ -442,3 +514,4 @@ const sendToken5 = (seller, statusCode, res, email) => {
   const token = seller.getSignedToken();
   res.status(statusCode).json({ sucess: true, token, seller, email });
 };
+
