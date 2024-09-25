@@ -149,28 +149,42 @@ exports.reactivatePromoCode = async (req, res) => {
   try {
     const { code, email } = req.body;
 
-    const promoCodeObj = await PromoCode.findOne({ code });
+    // Find the promo code by code and email
+    const promoCodeObj = await PromoCode.findOne({ code, email });
 
     if (!promoCodeObj) {
-      return res.status(404).json({ error: 'Promo code not found' });
+      return res.status(404).json({ error: 'Promo code not found for this email' });
     }
 
-    // Check if email is missing and update if provided
-    if (!promoCodeObj.email && email) {
-      promoCodeObj.email = email;
+    // Get current date and one year ahead
+    const currentDate = new Date();
+    const oneYearAhead = new Date(currentDate.getTime() + 365 * 24 * 60 * 60 * 1000);
+
+    // If promo code's expiration is greater than one year ahead of current time, reject the update
+    if (promoCodeObj.expirationDate > oneYearAhead) {
+      return res.status(400).json({ error: 'Promo code expiration cannot be extended by more than one year.' });
     }
 
-    // Extend expiration date by one year from now
-    promoCodeObj.expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+    // Extend expiration date by one year from the current expiration date, but ensure it doesn't exceed the one-year limit
+    const newExpirationDate = new Date(promoCodeObj.expirationDate.getTime() + 365 * 24 * 60 * 60 * 1000);
+
+    if (newExpirationDate > oneYearAhead) {
+      promoCodeObj.expirationDate = oneYearAhead;
+    } else {
+      promoCodeObj.expirationDate = newExpirationDate;
+    }
+
     promoCodeObj.isActive = true; // Reactivate the promo code
 
+    // Save the updated promo code
     await promoCodeObj.save();
 
-    res.status(200).json({ message: 'Promo code reactivated successfully' });
+    res.status(200).json({ message: 'Promo code expiration date extended successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 function generatePromoCode() {
@@ -238,7 +252,8 @@ exports.checkExistingPromoCode = async (req, res) => {
     // Send both the promo code and isActive status in the response
     res.status(200).json({
       promoCode: promoCodeObj.code,
-      isActive: promoCodeObj.isActive
+      isActive: promoCodeObj.isActive,
+      expirationDate: promoCodeObj.expirationDate
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
