@@ -139,3 +139,28 @@ exports.viewHotelByLocation = async (req, res) => {
     res.status(500).send({ status: "Error with get", error: err.message });
   });
 };
+
+// New Controller: Update Hotel expiration date by id
+// This function allows updating the expiration date of an existing advertisement  by id
+exports.updateHotelAddExpiration = async (req, res) => {
+  try {
+    const { _id, newExpirationDate } = req.body;
+
+    // Find the promo code by the user's email
+    const hotelObj = await Hotel.findOne({ _id });
+
+    if (!hotelObj) {
+      return res.status(404).json({ error: 'hotel Add not found for this id' });
+    }
+
+    // Update the expiration date with the new provided date (1 year from now)
+    hotelObj.expirationDate = new Date(newExpirationDate);
+
+    // Save the updated promo code
+    await hotelObj.save();
+
+    res.status(200).json({ message: 'Hotel add expiration date updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
