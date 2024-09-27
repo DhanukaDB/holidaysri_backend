@@ -4,27 +4,6 @@ const Order = require("../models/Order");
 const ArchivedEarn = require("../models/ArchivedEarns");
 
 // Generate promo code
-// exports.generatePromoCode = async (req, res) => {
-//   try {
-//     const { discountPercentage, email } = req.body;
-//     const generatedCode = generatePromoCode();
-
-//     // Calculate expiration date (1 year from the code generated date)
-//     const expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-
-//     const promoCode = new PromoCode({
-//       email,
-//       code: generatedCode,
-//       discountPercentage,
-//       expirationDate,
-//     });
-//     await promoCode.save();
-
-//     res.status(201).send(promoCode);
-//   } catch (error) {
-//     res.status(500).send(error.message);
-//   }
-// };
 exports.generatePromoCode = async (req, res) => {
   try {
     const { email } = req.body;
@@ -130,7 +109,7 @@ exports.createOrder = async (req, res) => {
 
     res.status(201).send(order);
   } catch (error) {
-    res.status500.send(error.message);
+    res.status(500).send(error.message);
   }
 };
 
@@ -185,7 +164,30 @@ exports.reactivatePromoCode = async (req, res) => {
   }
 };
 
+// New Controller: Update promo code expiration date by email
+// This function allows updating the expiration date of an existing promo code by email
+exports.updatePromoCodeExpiration = async (req, res) => {
+  try {
+    const { email, newExpirationDate } = req.body;
 
+    // Find the promo code by the user's email
+    const promoCodeObj = await PromoCode.findOne({ email });
+
+    if (!promoCodeObj) {
+      return res.status(404).json({ error: 'Promo code not found for this email' });
+    }
+
+    // Update the expiration date with the new provided date (1 year from now)
+    promoCodeObj.expirationDate = new Date(newExpirationDate);
+
+    // Save the updated promo code
+    await promoCodeObj.save();
+
+    res.status(200).json({ message: 'Promo code expiration date updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 function generatePromoCode() {
   const length = 8; // You can adjust the length as needed
