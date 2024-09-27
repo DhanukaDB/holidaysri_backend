@@ -7,6 +7,9 @@ const DeletedEvent = require("../models/Backup");
 exports.addNewEvent = async (req, res) => {
   const { eventName, email, contactNo, date, ticketPrice, maximumCrowd, eventLocation, description, images } = req.body;
 
+// Calculate expiration date (1 year from the code generated date)
+const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
   const newEvent = new Event({
     eventName,
     email,
@@ -16,7 +19,8 @@ exports.addNewEvent = async (req, res) => {
     maximumCrowd,
     eventLocation,
     description,
-    images
+    images,
+    expirationDate
   });
 
   newEvent.save()

@@ -93,7 +93,8 @@ const hotelSchema = new Schema({
   },
   cctv: {
     type: Boolean,
-  }
+  },
+  expirationDate: { type: Date, required: true },
 
 }, { timestamps: true });
 

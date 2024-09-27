@@ -5,14 +5,14 @@ const Backup = require("../models/Backup");
 exports.addNewHotel = async (req, res) => {
   const {
     hotelName,category,email,location,description,price,images, googleMap,whatsappNumber,fb,contactNumber,webUrl,fullboardPrice,halfboardPrice,liquor,smoke,roomType,roomCapacity,parking,internet,bbqFacilities,chef,activities,cctv
- 
-
   } = req.body;
+
+  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   Hotel.findOne({ hotelName: hotelName })
     .then((savedHotel) => {
       const newHotel = new Hotel({
-        hotelName,category,email,location,description,price,images, googleMap,whatsappNumber,fb,contactNumber,webUrl,fullboardPrice,halfboardPrice,liquor,smoke,roomType,roomCapacity,parking,internet,bbqFacilities,chef,activities,cctv
+        hotelName,category,email,location,description,price,images, googleMap,whatsappNumber,fb,contactNumber,webUrl,fullboardPrice,halfboardPrice,liquor,smoke,roomType,roomCapacity,parking,internet,bbqFacilities,chef,activities,cctv,expirationDate
       });
 
       newHotel.save().then(() => {

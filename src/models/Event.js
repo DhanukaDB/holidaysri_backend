@@ -37,6 +37,8 @@ const eventSchema = new Schema({
         }
     },
 
+    expirationDate: { type: Date, required: true },
+
    
 }, { timestamps: true }); // Adding { timestamps: true } here
 
