@@ -18,7 +18,7 @@ const PartnerSchema = new Schema(
     },
     subrole: {
       type: String,
-      required: true,
+      required: true, // Corrected from "require"
     },
     nic: {
       type: String,
@@ -30,11 +30,11 @@ const PartnerSchema = new Schema(
     },
     contactNumber: {
       type: Number,
-      required: true,
+      required: true, // Corrected from "require"
     },
     password: {
       type: String,
-      required: true,
+      required: true, // Corrected from "require"
     },
     location: {
       type: String,
@@ -45,32 +45,11 @@ const PartnerSchema = new Schema(
     partnerProfileImage: {
       type: String,
     },
-    
-    // New fields
-    age: {
-      type: Number,
-      required: true,
-    },
-    gender: {
-      type: String,
-      enum: ['Male', 'Female', 'Other'], // Enum to restrict possible values
-      required: true,
-    },
-    bio: {
-      type: String,
-      maxlength: 500, // Limit the length of bio
-    },
-    interests: {
-      ttype: String,
-      maxlength: 500, // Array of strings to store multiple interests
-    },
-
-    // For password reset functionality
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
   {
-    timestamps: true,
+    timestamps: true, // Enable timestamps
   }
 );
 
