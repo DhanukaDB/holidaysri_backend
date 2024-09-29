@@ -61,7 +61,7 @@ const PartnerSchema = new Schema(
       maxlength: 500, // Limit the length of bio
     },
     interests: {
-      ttype: String,
+      type: String,
       maxlength: 500, // Array of strings to store multiple interests
     },
 
