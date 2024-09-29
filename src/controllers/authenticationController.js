@@ -80,46 +80,13 @@ exports.registerGuide = async (req, res, next) => {
 
 
 exports.registerPartner = async (req, res, next) => {
-  const {
-    subscription,
-    role,
-    name,
-    subrole,
-    nic,
-    email,
-    contactNumber,
-    password,
-    location,
-    country,
-    partnerProfileImage,
-    age,             // New field
-    gender,          // New field
-    bio,             // New field
-    interests        // New field
-  } = req.body;
+  const { subscription, role, name, subrole, nic, email, contactNumber, password, location,country, partnerProfileImage } = req.body;
 
   // Validate subscription
   if (subscription !== "subscribed") {
     return res.status(400).json({
       success: false,
       error: "Subscription must be 'subscribed'.",
-    });
-  }
-
-  // Validate gender (ensure it's one of the allowed values)
-  const validGenders = ["Male", "Female", "Other"];
-  if (!validGenders.includes(gender)) {
-    return res.status(400).json({
-      success: false,
-      error: "Gender must be 'Male', 'Female', or 'Other'.",
-    });
-  }
-
-  // Validate age (optional: you can add more specific validation for age range)
-  if (age < 12 || age > 100) {
-    return res.status(400).json({
-      success: false,
-      error: "Age must be between 18 and 100.",
     });
   }
 
@@ -136,22 +103,15 @@ exports.registerPartner = async (req, res, next) => {
       location,
       country,
       partnerProfileImage,
-      age,            // Include new field
-      gender,         // Include new field
-      bio,            // Include new field
-      interests       // Include new field
     });
-
-    // Send the token after successful registration
     sendToken3(partner, 201, res);
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Error occurred in registerPartner: " + error.message,
+      error: "Error occurred in registerPartner: " + error,
     });
   }
 };
-
 
 
 
