@@ -49,12 +49,12 @@ const PartnerSchema = new Schema(
     // New fields
     age: {
       type: Number,
-      required: true,
+      
     },
     gender: {
       type: String,
       enum: ['Male', 'Female', 'Other'], // Enum to restrict possible values
-      required: true,
+      
     },
     bio: {
       type: String,
