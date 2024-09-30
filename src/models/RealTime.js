@@ -63,6 +63,7 @@ const realTimeSchema = new Schema({
     DailyOrMonth: {
         type: String,
     },
+    expirationDate: { type: Date, required: true },
    
 }, { timestamps: true }); // Adding { timestamps: true } here
 
