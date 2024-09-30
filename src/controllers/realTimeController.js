@@ -20,7 +20,8 @@ exports.addNewRealTime = async (req, res) => {
     price,
     rideDate,
     rideTime,
-    ApxTime
+    ApxTime,
+    DailyOrMonth
   } = req.body;
 
   try {
@@ -47,7 +48,8 @@ exports.addNewRealTime = async (req, res) => {
       price,
       rideDate,
       rideTime,
-      ApxTime
+      ApxTime,
+      DailyOrMonth
     });
 
     await newRealTime.save();

@@ -60,7 +60,9 @@ const realTimeSchema = new Schema({
     ApxTime: {
         type: Number,
     },
-
+    DailyOrMonth: {
+        type: String,
+    },
    
 }, { timestamps: true }); // Adding { timestamps: true } here
 
