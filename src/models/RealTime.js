@@ -56,7 +56,10 @@ const realTimeSchema = new Schema({
     },
     rideTime: {
         type: String,
-    }
+    },
+    ApxTime: {
+        type: Number,
+    },
 
    
 }, { timestamps: true }); // Adding { timestamps: true } here
