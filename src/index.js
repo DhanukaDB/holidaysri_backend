@@ -14,26 +14,11 @@ const { deleteOldRecords } = require('./expiration.js');
 const { deleteExpiredRecords } = require('./realtimeExpire.js');
 
 const app = express();
-
 // Enable all CORS requests
-// Allow all origins
-app.use(cors({
-  origin: '*', // Allow all origins
-  methods: 'GET,POST,PUT,DELETE,OPTIONS', // Allow specific methods
-  allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
-  credentials: true // Enable if you're sending cookies or authorization headers
-}));
+app.use('*',cors());
 
 // Handle CORS preflight requests for all routes
-// Handle preflight requests for all routes
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://holidaysri.com');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(204); // No Content
-});
-
+app.options('*', cors());  // This will handle preflight requests globally for all routes
 
 app.use(express.json());
 
