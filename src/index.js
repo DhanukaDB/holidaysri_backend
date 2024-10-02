@@ -28,7 +28,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authenticationRoutes'));
@@ -91,6 +90,11 @@ app.use('/collection', collectionRouter);
 //Payment Request Router
 const PaymentRouter = require('./routes/PaymentRoutes.js');
 app.use('/paymentrequest', PaymentRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 const initialize = async () => {
     try {
