@@ -1,6 +1,6 @@
 const realTimeDetails = require("../models/RealTime");
 const Backup = require("../models/Backup");
-const { sendRideAddEmail} = require('../utils/email')
+// const { sendRideAddEmail} = require('../utils/email')
 
 // Add new Vehicle for system
 exports.addNewRealTime = async (req, res) => {
@@ -55,8 +55,8 @@ exports.addNewRealTime = async (req, res) => {
       expirationDate
     });
 
-    const userEmail = newRealTime.email; //now send the email to relevant User
-    await sendRideAddEmail(userEmail);
+    // const userEmail = newRealTime.email; //now send the email to relevant User
+    // await sendRideAddEmail(userEmail);
 
     await newRealTime.save();
     res.json("RealTime Advertisement Added");
