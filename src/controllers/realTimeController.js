@@ -1,6 +1,5 @@
 const realTimeDetails = require("../models/RealTime");
 const Backup = require("../models/Backup");
-const { sendRideAddEmail} = require('../utils/email')
 
 // Add new Vehicle for system
 exports.addNewRealTime = async (req, res) => {
