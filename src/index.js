@@ -15,7 +15,7 @@ const { deleteExpiredRecords } = require('./realtimeExpire.js');
 
 const app = express();
 // Enable all CORS requests
-app.use('*',cors());
+app.use(cors());
 
 // Handle CORS preflight requests for all routes
 app.options('*', cors());  // This will handle preflight requests globally for all routes
