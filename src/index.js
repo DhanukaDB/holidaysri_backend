@@ -17,17 +17,6 @@ const app = express();
 // Enable all CORS requests
 app.use(cors());
 
-// Handle CORS preflight requests for all routes
-app.options('*', cors());  // This will handle preflight requests globally for all routes
-
-const corsOptions = {
-  origin: ["http://localhost:5173", "https://holidaysri-backend-9xm4.onrender.com"], // Allow these origins
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
-  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-};
-
-app.use(cors(corsOptions));
-
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authenticationRoutes'));
@@ -91,11 +80,6 @@ app.use('/collection', collectionRouter);
 const PaymentRouter = require('./routes/PaymentRoutes.js');
 app.use('/paymentrequest', PaymentRouter);
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
-});
-
 const initialize = async () => {
     try {
       await mongoose.connect(process.env.MONGO_CONNECT_URL);
@@ -104,7 +88,7 @@ const initialize = async () => {
       console.log(e);
     }
   };
-  
+
   const startServer = async () => {
     await initialize();
     app.listen(process.env.PORT || 8000);
