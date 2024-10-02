@@ -17,6 +17,9 @@ const app = express();
 // Enable all CORS requests
 app.use(cors());
 
+// Handle CORS preflight requests for all routes
+app.options('*', cors());  // This will handle preflight requests globally for all routes
+
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authenticationRoutes'));
