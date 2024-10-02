@@ -94,6 +94,9 @@ const hotelSchema = new Schema({
   cctv: {
     type: Boolean,
   },
+  promoCode: {
+    type: String,
+  },
   expirationDate: { type: Date, required: true },
 
 }, { timestamps: true });
