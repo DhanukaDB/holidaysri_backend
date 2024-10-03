@@ -45,6 +45,18 @@ const PartnerSchema = new Schema(
     partnerProfileImage: {
       type: String,
     },
+    age: {
+      type: String, // new
+    },
+    gender: {
+      type: String, // new
+    },
+    bio: {
+      type: String, // new
+    },
+    interest: {
+      type: String, // new
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
