@@ -103,6 +103,10 @@ exports.registerPartner = async (req, res, next) => {
       location,
       country,
       partnerProfileImage,
+      age,
+      gender,
+      bio,
+      interest,
     });
     sendToken3(partner, 201, res);
   } catch (error) {
