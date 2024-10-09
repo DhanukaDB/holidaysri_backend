@@ -14,8 +14,12 @@ const { deleteOldRecords } = require('./expiration.js');
 const { deleteExpiredRecords } = require('./realtimeExpire.js');
 
 const app = express();
-// Enable all CORS requests
-app.use(cors());
+
+// Enable CORS requests from origin
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
+
 
 app.use(express.json());
 
