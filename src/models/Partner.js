@@ -42,6 +42,21 @@ const PartnerSchema = new Schema(
     country: {
       type: String,
     },
+    gender:{
+      type: String //new
+    },
+  
+    age:{
+      type: String //new
+    },
+  
+    bio:{
+      type: String //new
+    },
+  
+    interest:{
+      type: String //new
+    },
     partnerProfileImage: {
       type: String,
     },

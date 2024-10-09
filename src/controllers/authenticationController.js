@@ -80,7 +80,7 @@ exports.registerGuide = async (req, res, next) => {
 
 
 exports.registerPartner = async (req, res, next) => {
-  const { subscription, role, name, subrole, nic, email, contactNumber, password, location,country, partnerProfileImage } = req.body;
+  const { subscription, role, name, subrole, nic, email, contactNumber, password, location,country, gender, age, bio, interest, partnerProfileImage } = req.body;
 
   // Validate subscription
   if (subscription !== "subscribed") {
@@ -102,6 +102,10 @@ exports.registerPartner = async (req, res, next) => {
       password,
       location,
       country,
+      gender,
+      age,
+      bio,
+      interest,
       partnerProfileImage,
     });
     sendToken3(partner, 201, res);
