@@ -17,8 +17,10 @@ const app = express();
 
 // Enable CORS requests from origin
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: ["http://localhost:5173", "https://holidaysri.com"]
 }));
+
+app.options('*', cors()); // This will enable preflight requests for all routes
 
 
 app.use(express.json());
