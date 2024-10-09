@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const  mongoose = require('mongoose');
 require("dotenv").config();
+const cronJobs = require('./cron/cronJobs'); // Import your cron jobs
 
 // const userRouter = require("./routes/User-routes");
 
