@@ -144,7 +144,7 @@ exports.viewHotelByLocation = async (req, res) => {
 
 // Set up the email transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // You can use other services like SendGrid, Mailgun, etc.
+  service: process.env.EMAIL_SERVICE, // You can use other services like SendGrid, Mailgun, etc.
   auth: {
     user: process.env.EMAIL_USER, // Your email address
     pass: process.env.EMAIL_PASS // Your email password or app password
@@ -160,7 +160,13 @@ const sendEmail = async (to, subject, text) => {
     text: text,
   };
 
-  return transporter.sendMail(mailOptions);
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response); // Success logging
+  } catch (error) {
+    console.error("Error sending email: ", error); // Error logging
+    throw error; // Throw the error to handle it in the calling function
+  }
 };
 
 // New Controller: Update Hotel expiration date by id
