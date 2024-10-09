@@ -1,5 +1,6 @@
 const Hotel = require("../models/Hotel");
 const Backup = require("../models/Backup");
+const nodemailer = require('nodemailer');
 
 // add new hotel for system
 exports.addNewHotel = async (req, res) => {
@@ -140,11 +141,33 @@ exports.viewHotelByLocation = async (req, res) => {
   });
 };
 
+
+// Set up the email transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // You can use other services like SendGrid, Mailgun, etc.
+  auth: {
+    user: process.env.EMAIL_USER, // Your email address
+    pass: process.env.EMAIL_PASS // Your email password or app password
+  }
+});
+
+// Function to send email
+const sendEmail = async (to, subject, text) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER, // sender address
+    to: to, // recipient address
+    subject: subject,
+    text: text,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
 // New Controller: Update Hotel expiration date by id
 // This function allows updating the expiration date of an existing advertisement  by id
 exports.updateHotelAddExpiration = async (req, res) => {
   try {
-    const { _id, newExpirationDate } = req.body;
+    const { _id, newExpirationDate, userEmail } = req.body;
 
     // Find the promo code by the user's email
     const hotelObj = await Hotel.findOne({ _id });
@@ -156,10 +179,16 @@ exports.updateHotelAddExpiration = async (req, res) => {
     // Update the expiration date with the new provided date (1 year from now)
     hotelObj.expirationDate = new Date(newExpirationDate);
 
-    // Save the updated promo code
+     // Save the updated hotel object
     await hotelObj.save();
 
-    res.status(200).json({ message: 'Hotel add expiration date updated successfully' });
+    // Send email notification to the user
+    const emailSubject = 'Hotel Add Expiration Date Updated';
+    const emailText = `Dear user,\n\nThe expiration date for your hotel add has been updated to ${newExpirationDate}.\n\nThank you!`;
+
+    await sendEmail(userEmail, emailSubject, emailText); // Send email
+
+    res.status(200).json({ message: 'Hotel expiration date updated successfully and email sent' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
