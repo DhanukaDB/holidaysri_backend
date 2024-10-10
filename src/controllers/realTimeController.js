@@ -1,5 +1,35 @@
 const realTimeDetails = require("../models/RealTime");
 const Backup = require("../models/Backup");
+const nodemailer = require('nodemailer');
+
+// Set up the email transporter
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // e.g., 'gmail'
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS  // Your password or app password
+  }
+});
+
+// Function to send an email
+const sendRideAddEmail = async (to, dailyOrMonth, expirationDate) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: 'Ride Added Successfully',
+    text: `Dear user,\n\nYour ride advertisement has been added successfully.\n\nHere are the details:\n\n` +
+          `Subscription Type: ${dailyOrMonth}\n` +
+          `Expiration Date: ${new Date(expirationDate).toDateString()}\n\nThank you for using our service!`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Ride add email sent successfully');
+  } catch (error) {
+    console.error('Error sending ride add email:', error);
+    throw error;
+  }
+};
 
 // Add new Vehicle for system
 exports.addNewRealTime = async (req, res) => {
@@ -58,7 +88,11 @@ exports.addNewRealTime = async (req, res) => {
       // await sendRideAddEmail(userEmail);
 
     await newRealTime.save();
-    res.json("RealTime Advertisement Added");
+
+     // Send the email to the user
+    await sendRideAddEmail(email, DailyOrMonth, expirationDate);
+
+    res.json("RealTime Advertisement Added and Email Sent");
   } catch (err) {
     res.status(500).json({ error: "Error adding real-time details", message: err.message });
   }

@@ -1,6 +1,8 @@
 // cronJobs.js
 const cron = require('node-cron');
 const Hotel = require('../models/Hotel');
+const PromoCode = require("../models/promo_code");
+const realTimeDetails = require("../models/RealTime");
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables
 
@@ -82,7 +84,7 @@ cron.schedule('0 0 * * *', async () => {
       console.log('Running daily expired promo code check...');
   
       // Find all promo codes that have expired
-      const expiredPromoCodes = await PromoCode.find({ expirationDate: { $lt: new Date() }, isActive: true });
+      const expiredPromoCodes = await PromoCode.find({ expirationDate: { $lt: new Date()}});
   
       if (expiredPromoCodes.length > 0) {
         for (let promoCode of expiredPromoCodes) {
@@ -92,8 +94,6 @@ cron.schedule('0 0 * * *', async () => {
   
           await sendEmail(promoCode.email, emailSubject, emailText);
   
-          // Deactivate the promo code
-          promoCode.isActive = false;
           await promoCode.save();
         }
       }
@@ -128,5 +128,66 @@ cron.schedule('0 0 * * *', async () => {
       console.error("Error in soon-to-expire promo code cron job:", error.message);
     }
   });
+
+
+  // Cron job to send emails when real-time advertisements expire
+cron.schedule('0 0 * * *', async () => {
+    try {
+        console.log('Checking for expired real-time advertisements...');
+
+        const expiredRides = await realTimeDetails.find({
+            expirationDate: { $lt: new Date() },
+        });
+
+        if (expiredRides.length > 0) {
+            for (let ride of expiredRides) {
+                const emailSubject = 'Your Ride Advertisement Has Expired';
+                const emailText = `Dear user,\n\nYour ride advertisement for vehicle ${ride.vehicleID} has expired on ${ride.expirationDate.toDateString()}.\n\nPlease renew your advertisement or contact support for more information.`;
+
+                await sendEmail(ride.email, emailSubject, emailText);
+
+                await ride.save();
+            }
+        }
+
+        console.log(`Sent expiration notifications for ${expiredRides.length} expired rides.`);
+    } catch (error) {
+        console.error('Error in expired real-time advertisement cron job:', error.message);
+    }
+});
+
+// Cron job to send emails for real-time advertisements expiring within 3 days and where DailyOrMonth = 'Monthly'
+cron.schedule('0 0 * * *', async () => {
+    try {
+        console.log('Running daily check for soon-to-expire Monthly ride advertisements...');
+
+        // Get the current date and the date 3 days from now
+        const currentDate = new Date();
+        const threeDaysFromNow = new Date(currentDate);
+        threeDaysFromNow.setDate(currentDate.getDate() + 3);
+
+        // Find rides (realTimeDetails) that are Monthly and will expire within 3 days
+        const soonToExpireMonthlyRides = await realTimeDetails.find({
+            DailyOrMonth: 'Monthly', // Only select rides with Monthly subscription
+            expirationDate: { $gte: currentDate, $lte: threeDaysFromNow } // Expiring in the next 3 days
+        });
+
+        // Send emails to users with rides expiring soon
+        if (soonToExpireMonthlyRides.length > 0) {
+            for (let ride of soonToExpireMonthlyRides) {
+                const emailSubject = 'Your Monthly Ride Advertisement is Expiring Soon';
+                const emailText = `Dear user,\n\nYour monthly ride advertisement for vehicle ${ride.vehicleID} is expiring soon on ${new Date(ride.expirationDate).toDateString()}.\n\nPlease renew your advertisement or contact support for more details.\n\nThank you for using our service!`;
+
+                // Send the email notification
+                await sendEmail(ride.email, emailSubject, emailText);
+            }
+        }
+
+        console.log(`Sent notifications for ${soonToExpireMonthlyRides.length} monthly rides expiring soon.`);
+    } catch (error) {
+        console.error("Error in soon-to-expire monthly ride cron job:", error.message);
+    }
+});
+
 
 module.exports = {}; // Export if you need to extend functionality later

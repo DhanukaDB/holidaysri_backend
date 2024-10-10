@@ -2,28 +2,47 @@ const Hotel = require("../models/Hotel");
 const Backup = require("../models/Backup");
 const nodemailer = require('nodemailer');
 
-// add new hotel for system
+// Add new hotel and send email
 exports.addNewHotel = async (req, res) => {
   const {
-    hotelName,category,email,location,description,price,images, googleMap,whatsappNumber,fb,contactNumber,webUrl,fullboardPrice,halfboardPrice,liquor,smoke,roomType,roomCapacity,parking,internet,bbqFacilities,chef,activities,cctv,promoCode
+    hotelName, category, email, location, description, price, images, googleMap, whatsappNumber, fb, contactNumber, webUrl,
+    fullboardPrice, halfboardPrice, liquor, smoke, roomType, roomCapacity, parking, internet, bbqFacilities, chef, activities, cctv, promoCode
   } = req.body;
 
-  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
 
-  Hotel.findOne({ hotelName: hotelName })
-    .then((savedHotel) => {
-      const newHotel = new Hotel({
-        hotelName,category,email,location,description,price,images, googleMap,whatsappNumber,fb,contactNumber,webUrl,fullboardPrice,halfboardPrice,liquor,smoke,roomType,roomCapacity,parking,internet,bbqFacilities,chef,activities,cctv,expirationDate,promoCode
-      });
+  try {
+    // Check if hotel already exists
+    const savedHotel = await Hotel.findOne({ hotelName });
+    
+    if (savedHotel) {
+      return res.status(400).json({ error: "Hotel with this name already exists" });
+    }
 
-      newHotel.save().then(() => {
-        res.json("New Hotel Added");
-      }).catch((err) => {
-        res.status(500).json({ error: "Error adding hotel", message: err.message });
-      });
-    }).catch((err) => {
-      res.status(500).json({ error: "Error finding hotel", message: err.message });
+    // Create new hotel
+    const newHotel = new Hotel({
+      hotelName, category, email, location, description, price, images, googleMap, whatsappNumber, fb, contactNumber, webUrl,
+      fullboardPrice, halfboardPrice, liquor, smoke, roomType, roomCapacity, parking, internet, bbqFacilities, chef, activities, cctv,
+      expirationDate, promoCode
     });
+
+    // Save the new hotel
+    await newHotel.save();
+
+    // Send success response
+    res.json("New Hotel Added");
+
+    // Send email to the hotel owner
+    const emailSubject = "Hotel Added Successfully!";
+    const emailText = `Dear ${hotelName},\n\nYour hotel has been successfully added to our system.\nPromo Code: ${promoCode}\nExpiration Date: ${expirationDate.toDateString()}\n\nThank you!`;
+    
+    // Call the function to send the email
+    await sendEmail(email, emailSubject, emailText);
+
+  } catch (err) {
+    console.error("Error adding hotel: ", err);
+    res.status(500).json({ error: "Error adding hotel", message: err.message });
+  }
 };
 
 // delete existing one
