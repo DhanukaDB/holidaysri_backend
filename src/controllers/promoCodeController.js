@@ -39,12 +39,12 @@ exports.generatePromoCode = async (req, res) => {
     // Save the promo code (new or updated)
     await promoCode.save();
 
-        // Send email notification to the user
-        const emailSubject = 'Your New Promo Code';
-        const emailText = `Dear user,\n\nYour promo code is: ${generatedCode}.\n\nIt will expire on ${expirationDate.toDateString()}.\n\nThank you!`;
+    // Send email notification to the user
+    const emailSubject = 'Your New Promo Code';
+    const emailText = `Dear user,\n\nYour promo code is: ${generatedCode}.\n\nIt will expire on ${expirationDate.toDateString()}.\n\nThank you!`;
     
-        // Call the function to send the email
-        await sendEmail(email, emailSubject, emailText);
+    // Call the function to send the email
+    await sendEmail(email, emailSubject, emailText);
 
     res.status(201).send(promoCode);
   } catch (error) {
@@ -218,7 +218,14 @@ exports.updatePromoCodeExpiration = async (req, res) => {
     // Save the updated promo code
     await promoCodeObj.save();
 
-    res.status(200).json({ message: 'Promo code expiration date updated successfully' });
+   // Send email notification to the user
+    const emailSubject = 'Promo Code Expiration Date Updated';
+    const emailText = `Dear user,\n\nThe expiration date for your promo code has been updated to ${newExpirationDate.toDateString()}.\n\nThank you!`;
+    
+    // Call the function to send the email
+     await sendEmail(email, emailSubject, emailText);
+
+    res.status(200).json({ message: 'Promo code expiration date updated successfully and email sent' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
