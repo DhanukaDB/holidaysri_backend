@@ -2,6 +2,7 @@ const PromoCode = require("../models/promo_code");
 const Earning = require("../models/earnings");
 const Order = require("../models/Order");
 const ArchivedEarn = require("../models/ArchivedEarns");
+const nodemailer = require('nodemailer');
 
 // Generate promo code
 exports.generatePromoCode = async (req, res) => {
@@ -37,6 +38,13 @@ exports.generatePromoCode = async (req, res) => {
 
     // Save the promo code (new or updated)
     await promoCode.save();
+
+        // Send email notification to the user
+        const emailSubject = 'Your New Promo Code';
+        const emailText = `Dear user,\n\nYour promo code is: ${generatedCode}.\n\nIt will expire on ${expirationDate.toDateString()}.\n\nThank you!`;
+    
+        // Call the function to send the email
+        await sendEmail(email, emailSubject, emailText);
 
     res.status(201).send(promoCode);
   } catch (error) {
@@ -164,6 +172,33 @@ exports.reactivatePromoCode = async (req, res) => {
   }
 };
 
+// Set up the email transporter
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // Example: 'gmail', 'SendGrid', etc.
+  auth: {
+    user: process.env.EMAIL_USER,  // Your email address
+    pass: process.env.EMAIL_PASS   // Your email password or app password
+  }
+});
+
+// Function to send email
+const sendEmail = async (to, subject, text) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER, // sender address
+    to: to, // recipient address
+    subject: subject,
+    text: text
+  };
+
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
+  } catch (error) {
+    console.error("Error sending email: ", error);
+    throw error;
+  }
+};
+
 // New Controller: Update promo code expiration date by email
 // This function allows updating the expiration date of an existing promo code by email
 exports.updatePromoCodeExpiration = async (req, res) => {
@@ -183,7 +218,14 @@ exports.updatePromoCodeExpiration = async (req, res) => {
     // Save the updated promo code
     await promoCodeObj.save();
 
-    res.status(200).json({ message: 'Promo code expiration date updated successfully' });
+   // Send email notification to the user
+    const emailSubject = 'Promo Code Expiration Date Updated';
+    const emailText = `Dear user,\n\nThe expiration date for your promo code has been updated to ${newExpirationDate.toDateString()}.\n\nThank you!`;
+    
+    // Call the function to send the email
+     await sendEmail(email, emailSubject, emailText);
+
+    res.status(200).json({ message: 'Promo code expiration date updated successfully and email sent' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

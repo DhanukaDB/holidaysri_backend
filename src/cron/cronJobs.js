@@ -76,4 +76,57 @@ cron.schedule('0 0 * * *', async () => {
     }
   });
 
+  // Cron job to send emails for expired promo codes
+cron.schedule('0 0 * * *', async () => {
+    try {
+      console.log('Running daily expired promo code check...');
+  
+      // Find all promo codes that have expired
+      const expiredPromoCodes = await PromoCode.find({ expirationDate: { $lt: new Date() }, isActive: true });
+  
+      if (expiredPromoCodes.length > 0) {
+        for (let promoCode of expiredPromoCodes) {
+          // Send email to the user informing them that their promo code has expired
+          const emailSubject = 'Promo Code Expired';
+          const emailText = `Dear user,\n\nYour promo code ${promoCode.code} has expired on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
+  
+          await sendEmail(promoCode.email, emailSubject, emailText);
+  
+          // Deactivate the promo code
+          promoCode.isActive = false;
+          await promoCode.save();
+        }
+      }
+    } catch (error) {
+      console.error("Error in expired promo code cron job:", error.message);
+    }
+  });
+  
+  // Cron job to send emails for promo codes expiring within 3 days
+  cron.schedule('0 0 * * *', async () => {
+    try {
+      console.log('Running daily soon-to-expire promo code check...');
+  
+      // Find promo codes that will expire within 3 days
+      const threeDaysFromNow = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+  
+      const soonToExpirePromoCodes = await PromoCode.find({
+        expirationDate: { $gte: new Date(), $lte: threeDaysFromNow },
+        isActive: true
+      });
+  
+      if (soonToExpirePromoCodes.length > 0) {
+        for (let promoCode of soonToExpirePromoCodes) {
+          // Send email to the user informing them that their promo code is about to expire
+          const emailSubject = 'Promo Code Expiring Soon';
+          const emailText = `Dear user,\n\nYour promo code ${promoCode.code} is expiring soon on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
+  
+          await sendEmail(promoCode.email, emailSubject, emailText);
+        }
+      }
+    } catch (error) {
+      console.error("Error in soon-to-expire promo code cron job:", error.message);
+    }
+  });
+
 module.exports = {}; // Export if you need to extend functionality later
