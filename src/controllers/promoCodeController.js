@@ -220,7 +220,7 @@ exports.updatePromoCodeExpiration = async (req, res) => {
 
    // Send email notification to the user
     const emailSubject = 'Promo Code Expiration Date Updated';
-    const emailText = `Dear user,\n\nThe expiration date for your promo code has been updated to ${newExpirationDate.toDateString()}.\n\nThank you!`;
+    const emailText = `Dear user,\n\nThe expiration date for your promo code has been updated to ${newExpirationDate}.\n\nThank you!`;
     
     // Call the function to send the email
      await sendEmail(email, emailSubject, emailText);
