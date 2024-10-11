@@ -3,7 +3,10 @@ const cron = require('node-cron');
 const Hotel = require('../models/Hotel');
 const PromoCode = require("../models/promo_code");
 const realTimeDetails = require("../models/RealTime");
+const Guider = require("../models/Guide");
 const vehicleDetails = require("../models/Vehicle");
+const Partner = require('../models/Partner');
+
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables
 
@@ -235,6 +238,104 @@ cron.schedule('0 0 * * *', async () => { // Every day at midnight
       console.error("Error sending soon expiring vehicle notifications:", error);
     }
   });
+
+
+  // Cron job to send emails when partner' subscriptions have expired
+cron.schedule('0 0 * * *', async () => { 
+    try {
+        console.log('Checking for expired guides...');
+        const expiredGuides = await Partner.find({
+            expirationDate: { $lt: new Date() },
+        });
+
+        if (expiredGuides.length > 0) {
+            for (let guide of expiredGuides) {
+                const emailSubject = 'Your Travel Partner Subscription Has Expired';
+                const emailText = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
+                await sendEmail(guide.email, emailSubject, emailText);
+            }
+        }
+
+        console.log(`Sent notifications for ${expiredGuides.length} expired guides.`);
+    } catch (error) {
+        console.error('Error in expired guide cron job:', error.message);
+    }
+});
+
+// Cron job to send reminder emails for partner expiring within 3 days
+cron.schedule('0 0 * * *', async () => { 
+    try {
+        console.log('Checking for guides expiring within 3 days...');
+        const currentDate = new Date();
+        const threeDaysLater = new Date();
+        threeDaysLater.setDate(currentDate.getDate() + 3);
+
+        const soonToExpireGuides = await Partner.find({
+            expirationDate: { $gte: currentDate, $lte: threeDaysLater },
+        });
+
+        if (soonToExpireGuides.length > 0) {
+            for (let guide of soonToExpireGuides) {
+                const emailSubject = 'Your Travel Partner Subscription is Expiring Soon';
+                const emailText = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
+                await sendEmail(guide.email, emailSubject, emailText);
+            }
+        }
+
+        console.log(`Sent notifications for ${soonToExpireGuides.length} guides expiring soon.`);
+    } catch (error) {
+        console.error('Error in soon-to-expire guide cron job:', error.message);
+    }
+});
+
+
+  // Cron job to send emails when Guider' subscriptions have expired
+  cron.schedule('0 0 * * *', async () => { 
+    try {
+        console.log('Checking for expired guides...');
+        const expiredGuides = await Guider.find({
+            expirationDate: { $lt: new Date() },
+        });
+
+        if (expiredGuides.length > 0) {
+            for (let guide of expiredGuides) {
+                const emailSubject = 'Your Guide Subscription Has Expired';
+                const emailText = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
+                await sendEmail(guide.email, emailSubject, emailText);
+            }
+        }
+
+        console.log(`Sent notifications for ${expiredGuides.length} expired guides.`);
+    } catch (error) {
+        console.error('Error in expired guide cron job:', error.message);
+    }
+});
+
+// Cron job to send reminder emails for Guider expiring within 3 days
+cron.schedule('0 0 * * *', async () => { 
+    try {
+        console.log('Checking for guides expiring within 3 days...');
+        const currentDate = new Date();
+        const threeDaysLater = new Date();
+        threeDaysLater.setDate(currentDate.getDate() + 3);
+
+        const soonToExpireGuides = await Guider.find({
+            expirationDate: { $gte: currentDate, $lte: threeDaysLater },
+        });
+
+        if (soonToExpireGuides.length > 0) {
+            for (let guide of soonToExpireGuides) {
+                const emailSubject = 'Your Guide Subscription is Expiring Soon';
+                const emailText = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
+                await sendEmail(guide.email, emailSubject, emailText);
+            }
+        }
+
+        console.log(`Sent notifications for ${soonToExpireGuides.length} guides expiring soon.`);
+    } catch (error) {
+        console.error('Error in soon-to-expire guide cron job:', error.message);
+    }
+});
 
 
 module.exports = {}; // Export if you need to extend functionality later
