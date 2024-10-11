@@ -3,6 +3,7 @@ const cron = require('node-cron');
 const Hotel = require('../models/Hotel');
 const PromoCode = require("../models/promo_code");
 const realTimeDetails = require("../models/RealTime");
+const vehicleDetails = require("../models/Vehicle");
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables
 
@@ -188,6 +189,52 @@ cron.schedule('0 0 * * *', async () => {
         console.error("Error in soon-to-expire monthly ride cron job:", error.message);
     }
 });
+
+// Cron job for sending email notifications for expired vehicles
+cron.schedule('0 0 * * *', async () => { // Every day at midnight
+    try {
+      const expiredVehicles = await vehicleDetails.find({
+        expirationDate: { $lt: new Date() }
+      });
+  
+      if (expiredVehicles.length > 0) {
+        const emailsToSend = [...new Set(expiredVehicles.map(vehicle => vehicle.email))]; // Unique emails
+  
+        emailsToSend.forEach(async (email) => {
+          const emailSubject = 'Expired Vehicle Notifications';
+          const emailText = `Dear user,\n\nYour vehicle ad(s) have expired. Please check your account for further details.\n\nThank you!`;
+          await sendEmail(email, emailSubject, emailText);
+        });
+  
+        console.log(`Expired vehicle notifications sent to ${emailsToSend.length} users.`);
+      }
+    } catch (error) {
+      console.error("Error sending expired vehicle notifications:", error);
+    }
+  });
+  
+  // Cron job for sending email notifications for vehicles expiring soon (within 3 days)
+  cron.schedule('0 0 * * *', async () => { // Every day at midnight
+    try {
+      const soonExpiringVehicles = await vehicleDetails.find({
+        expirationDate: { $gte: new Date(), $lt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) } // Expiring within 3 days
+      });
+  
+      if (soonExpiringVehicles.length > 0) {
+        const emailsToSend = [...new Set(soonExpiringVehicles.map(vehicle => vehicle.email))]; // Unique emails
+  
+        emailsToSend.forEach(async (email) => {
+          const emailSubject = 'Vehicle Expiration Reminder';
+          const emailText = `Dear user,\n\nYour vehicle ad(s) are about to expire within the next 3 days. Please take necessary actions to extend their validity.\n\nThank you!`;
+          await sendEmail(email, emailSubject, emailText);
+        });
+  
+        console.log(`Soon expiring vehicle notifications sent to ${emailsToSend.length} users.`);
+      }
+    } catch (error) {
+      console.error("Error sending soon expiring vehicle notifications:", error);
+    }
+  });
 
 
 module.exports = {}; // Export if you need to extend functionality later

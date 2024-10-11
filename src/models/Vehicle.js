@@ -16,6 +16,7 @@ const VehicleSchema = new Schema(
       driverStatus: String,
       capacity: Number,
       ac: Boolean,
+      expirationDate: { type: Date, required: true },
       images: {
         type: [String], // Array of strings to store image URLs
         validate: {
