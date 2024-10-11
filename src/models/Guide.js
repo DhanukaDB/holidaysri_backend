@@ -50,7 +50,8 @@ const GuideSchema = new Schema({
   experience:{
     type: String
   },
-
+  expirationDate: { type: Date, required: true },
+  
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 }, {

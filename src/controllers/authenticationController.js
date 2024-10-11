@@ -5,6 +5,35 @@ const Partner = require("../models/Partner");
 const Agent = require("../models/Agent");
 const Seller = require("../models/Seller");
 
+const nodemailer = require('nodemailer');
+
+
+// Set up the email transporter
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // e.g., 'gmail'
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS  // Your password or app-specific password
+  }
+});
+
+// Reusable function to send email
+const sendEmail = async (to, subject, message) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: subject,
+    text: message
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+    throw error;
+  }
+};
 
 exports.registerUser = async (req, res, next) => {
   const { subscription,role,name, email, contactNumber, password } = req.body;
@@ -48,6 +77,8 @@ exports.registerAdmin = async (req, res, next) => {
 exports.registerGuide = async (req, res, next) => {
   const { subscription, role, name, nic, email, contactNumber, password, location, certificateImage, experience, profileImage } = req.body;
 
+  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+
   if (subscription !== "subscribed") {
     return res.status(400).json({
       success: false,
@@ -67,8 +98,17 @@ exports.registerGuide = async (req, res, next) => {
       location,
       certificateImage,
       experience,
-      profileImage
+      profileImage,
+      expirationDate,
     });
+
+    // Prepare the email content
+    const subject = 'Guide Registration Successful';
+    const message = `Dear ${name},\n\nYour guide registration has been completed successfully!\n\nThank you for registering with us. You now have access to the platform for 30 days as a subscribed member.\n\nBest regards,\nYour Company Team`;
+
+    // Send email notification to the user
+    await sendEmail(email, subject, message);
+
     sendToken1(guide, 201, res, email);
   } catch (error) {
     res.status(500).json({
@@ -81,6 +121,8 @@ exports.registerGuide = async (req, res, next) => {
 
 exports.registerPartner = async (req, res, next) => {
   const { subscription, role, name, subrole, nic, email, contactNumber, password, location,country, gender, age, bio, interest, partnerProfileImage } = req.body;
+
+  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
 
   // Validate subscription
   if (subscription !== "subscribed") {
@@ -107,7 +149,16 @@ exports.registerPartner = async (req, res, next) => {
       bio,
       interest,
       partnerProfileImage,
+      expirationDate,
     });
+
+    // Prepare the email content
+    const subject = 'Travel Partner Registration Successful';
+    const message = `Dear ${name},\n\nYour Travel Partner registration has been completed successfully!\n\nThank you for registering with us. You now have access to the platform for 30 days as a subscribed member.\n\nBest regards,\nYour Company Team`;
+
+    // Send email notification to the user
+    await sendEmail(email, subject, message);
+
     sendToken3(partner, 201, res);
   } catch (error) {
     res.status(500).json({
