@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {addNewRealTime, viewRealTime,viewOneRealTime,deleteRealTime,updateRealTime, viewOneRealTimeByName} = require ('../controllers/realTimeController')
+const {addNewRealTime, viewRealTime,viewOneRealTime,deleteRealTime,updateRealTime, viewOneRealTimeByName,updateLiveRideExpiration} = require ('../controllers/realTimeController')
 
 const router = express.Router();
 
@@ -21,5 +21,8 @@ router.get("/:id", viewOneRealTime);
 
 //view one dog
 router.get("/get/:name", viewOneRealTimeByName);
+
+//update Live Ride Expiration
+router.put("/ride-update-expiredate", updateLiveRideExpiration);
 
 module.exports = router;
