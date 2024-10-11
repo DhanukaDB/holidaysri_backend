@@ -60,6 +60,8 @@ const PartnerSchema = new Schema(
     partnerProfileImage: {
       type: String,
     },
+    expirationDate: { type: Date, required: true },
+    
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
