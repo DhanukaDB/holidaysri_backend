@@ -3,6 +3,33 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+// Set up the email transporter
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // e.g., 'gmail'
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS  // Your password or app-specific password
+  }
+});
+
+// Reusable function to send email
+const sendEmail = async (to, subject, message) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: subject,
+    text: message
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+    throw error;
+  }
+};
+
 //fetch suser profile
 exports.getPartnerProfile = async (req,res) =>{
     try{
@@ -174,5 +201,35 @@ exports.resetPassword = async (req, res) => {
     return res.status(200).json({ success: true, data: "Password updated" });
   } catch (err) {
     return res.status(500).send("Server error");
+  }
+};
+
+// This function allows updating the expiration date of an existing guider Profile by id
+exports.updatePartnerExpiration = async (req, res) => {
+  try {
+    const { _id, newExpirationDate, userEmail } = req.body;
+
+    // Find the vehicle ad by id
+    const partnerObj = await Partner.findOne({ _id });
+
+    if (!partnerObj) {
+      return res.status(404).json({ error: 'Partner not found for this id' });
+    }
+
+    // Update the expiration date with the new provided date
+    partnerObj.expirationDate = new Date(newExpirationDate);
+
+    // Save the updated vehicle object
+    await partnerObj.save();
+
+    // Send email notification to the user
+    const emailSubject = 'Travel Partner Profile Expiration Date Updated';
+    const emailText = `Dear Travel Partner,\n\nThe expiration date for your Travel Partner Profile has been updated to ${newExpirationDate}.\n\nThank you!`;
+
+    await sendEmail(userEmail, emailSubject, emailText); // Send email to the user
+
+    res.status(200).json({ message: 'partner expiration date updated successfully and email sent' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

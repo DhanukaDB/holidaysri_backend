@@ -13,6 +13,7 @@ const {
     allPartnerProfiles,
     resetPassword,
     forgotPassword,
+    updatePartnerExpiration,
 
     // getInvoice
 } = require("../controllers/partnerController");
@@ -25,5 +26,7 @@ router.route("/deletepartnerProfile").delete(protectedPartner,deletePartnerProfi
 router.route("/allPartnerProfiles").get(allPartnerProfiles);
 router.post("/forgotPassword", forgotPassword);
 router.put("/reset-Password/:resetToken", resetPassword);
+
+router.put("/partner-update-expiredate", updatePartnerExpiration);
 
 module.exports = router; 
