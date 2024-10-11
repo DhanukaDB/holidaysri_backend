@@ -21,7 +21,7 @@ router.get("/", viewVehicle);
 // View one vehicle by ID
 router.get("/:id", viewOneVehicle);
 
-// View one vehicle by ID
+// vehicle update expire date
 router.put("/vehicle-update-expiredate", updateVehicleAddExpiration);
 
 module.exports = router;

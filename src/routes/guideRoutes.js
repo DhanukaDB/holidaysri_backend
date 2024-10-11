@@ -13,6 +13,7 @@ const {
     allGuideProfiles,
     resetPassword,
     forgotPassword,
+    updateGuiderExpiration,
 
     // getInvoice
 } = require("../controllers/guideController");
@@ -25,5 +26,7 @@ router.route("/deleteguideProfile").delete(protectedGuide,deleteGuideProfile);
 router.route("/allGuideProfiles").get(allGuideProfiles);
 router.post("/forgotPassword", forgotPassword);
 router.put("/reset-Password/:resetToken", resetPassword);
+
+router.put("/guider-update-expiredate", updateGuiderExpiration);
 
 module.exports = router; 
