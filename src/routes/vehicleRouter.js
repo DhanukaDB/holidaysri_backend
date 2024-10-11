@@ -1,5 +1,5 @@
 const express = require('express');
-const { addNewVehicle, viewVehicle, viewOneVehicle, deleteVehicle, updateVehicle, viewVehicleByEmail } = require('../controllers/vehicleController');
+const { addNewVehicle, viewVehicle, viewOneVehicle, deleteVehicle, updateVehicle, viewVehicleByEmail,updateVehicleAddExpiration } = require('../controllers/vehicleController');
 
 const router = express.Router();
 
@@ -20,5 +20,8 @@ router.get("/", viewVehicle);
 
 // View one vehicle by ID
 router.get("/:id", viewOneVehicle);
+
+// View one vehicle by ID
+router.put("/vehicle-update-expiredate", updateVehicleAddExpiration);
 
 module.exports = router;

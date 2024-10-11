@@ -31,6 +31,24 @@ const sendRideAddEmail = async (to, dailyOrMonth, expirationDate) => {
   }
 };
 
+// Function to send email
+const sendEmail = async (to, subject, text) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: subject,
+    text: text,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
+};
+
 // Add new Vehicle for system
 exports.addNewRealTime = async (req, res) => {
   const {
@@ -228,5 +246,36 @@ exports.viewOneRealTimeByName = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+
+// Function to update the expiration date for live rides
+exports.updateLiveRideExpiration = async (req, res) => {
+  try {
+    const { _id, newExpirationDate, userEmail } = req.body;
+
+    // Find the live ride by id
+    const rideObj = await realTimeDetails.findOne({ _id });
+
+    if (!rideObj) {
+      return res.status(404).json({ error: 'Live ride not found for this id' });
+    }
+
+    // Update the expiration date with the new provided date
+    rideObj.expirationDate = new Date(newExpirationDate);
+
+    // Save the updated ride object
+    await rideObj.save();
+
+    // Send email notification to the user
+    const emailSubject = 'Live Ride Expiration Date Updated';
+    const emailText = `Dear user,\n\nThe expiration date for your live ride has been updated to ${new Date(newExpirationDate).toDateString()}.\n\nThank you for using our service!`;
+
+    await sendEmail(userEmail, emailSubject, emailText); // Send email to the user
+
+    res.status(200).json({ message: 'Live ride expiration date updated successfully and email sent' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
