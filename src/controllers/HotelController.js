@@ -2,6 +2,39 @@ const Hotel = require("../models/Hotel");
 const Backup = require("../models/Backup");
 const nodemailer = require('nodemailer');
 
+
+// Function to create the HTML email content
+const createEmailContent = (subject, body) => {
+  return `
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; }
+          .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+          .header { background-color: #f4f4f4; padding: 10px; text-align: center; }
+          .footer { margin-top: 20px; font-size: 0.8em; text-align: center; }
+          .logo { max-width: 150px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <img src="https://res.cloudinary.com/dzdbmcomu/image/upload/v1728733183/logo_wu7uvu.png" alt="HolidaySri.com Logo" class="logo"/>
+            <h2>${subject}</h2>
+          </div>
+          <div class="body">
+            <p>${body}</p>
+          </div>
+          <div class="footer">
+            <p>Thank you for using our services!</p>
+            <p>HolidaySri.com</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+};
+
 // Add new hotel and send email
 exports.addNewHotel = async (req, res) => {
   const {
@@ -34,10 +67,10 @@ exports.addNewHotel = async (req, res) => {
 
     // Send email to the hotel owner
     const emailSubject = "Hotel Added Successfully!";
-    const emailText = `Dear ${hotelName},\n\nYour hotel has been successfully added to our system.\nPromo Code: ${promoCode}\nExpiration Date: ${expirationDate.toDateString()}\n\nThank you!`;
+    const emailBody = `Dear ${hotelName},\n\nYour hotel has been successfully added to our system.\nPromo Code: ${promoCode}\nExpiration Date: ${expirationDate.toDateString()}\n\nThank you!`;
     
     // Call the function to send the email
-    await sendEmail(email, emailSubject, emailText);
+    await sendEmail(email, emailSubject, emailBody);
 
   } catch (err) {
     console.error("Error adding hotel: ", err);
@@ -171,12 +204,12 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send email
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, body) => {
   const mailOptions = {
     from: process.env.EMAIL_USER, // sender address
     to: to, // recipient address
     subject: subject,
-    text: text,
+    html: createEmailContent(subject, body), // Use HTML content
   };
 
   try {
@@ -209,9 +242,9 @@ exports.updateHotelAddExpiration = async (req, res) => {
 
     // Send email notification to the user
     const emailSubject = 'Hotel Add Expiration Date Updated';
-    const emailText = `Dear user,\n\nThe expiration date for your hotel add has been updated to ${newExpirationDate}.\n\nThank you!`;
+    const emailBody = `Dear user,\n\nThe expiration date for your hotel add has been updated to ${newExpirationDate}.\n\nThank you!`;
 
-    await sendEmail(userEmail, emailSubject, emailText); // Send email
+    await sendEmail(userEmail, emailSubject, emailBody); // Send email
 
     res.status(200).json({ message: 'Hotel expiration date updated successfully and email sent' });
   } catch (error) {
