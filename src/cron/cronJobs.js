@@ -19,13 +19,46 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Function to create the HTML email content
+const createEmailContent = (subject, body) => {
+    return `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; }
+            .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background: white; }
+            .header { background-color: #f4f4f4; padding: 10px; text-align: center; }
+            .footer { margin-top: 20px; font-size: 0.8em; text-align: center; }
+            .logo { max-width: 150px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <img src="https://res.cloudinary.com/dzdbmcomu/image/upload/v1728733183/logo_wu7uvu.png" alt="HolidaySri.com Logo" class="logo"/>
+              <h2>${subject}</h2>
+            </div>
+            <div class="body">
+              <p>${body}</p>
+            </div>
+            <div class="footer">
+              <p>Thank you for using our services!</p>
+              <p>HolidaySri.com</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  };
+
+
 // Function to send email
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, body) => {
   const mailOptions = {
     from: process.env.EMAIL_USER, // Sender address
     to: to, // Recipient address
     subject: subject,
-    text: text,
+    html: createEmailContent(subject, body), // Use HTML content
   };
 
   try {
@@ -46,10 +79,10 @@ cron.schedule('0 0,12 * * *', async () => {
 
     for (const hotel of expiredHotels) {
       const emailSubject = 'Your Hotel Advertisement has Expired';
-      const emailText = `Dear user,\n\nYour hotel advertisement "${hotel.hotelName}" has expired. Please consider renewing it.`;
+      const emailBody = `Dear user,\n\nYour hotel advertisement "${hotel.hotelName}" has expired. Please consider renewing it.`;
       
       // Send email notification
-      await sendEmail(hotel.email, emailSubject, emailText);
+      await sendEmail(hotel.email, emailSubject, emailBody);
     }
 
     console.log(`Sent notifications for ${expiredHotels.length} expired hotels.`);
@@ -70,10 +103,10 @@ cron.schedule('0 0,12 * * *', async () => {
   
       for (const hotel of soonToExpireHotels) {
         const emailSubject = 'Your Hotel Advertisement is Expiring Soon';
-        const emailText = `Dear user,\n\nYour hotel advertisement "${hotel.hotelName}" is set to expire on ${new Date(hotel.expirationDate).toLocaleDateString()}. Please consider renewing it.`;
+        const emailBody = `Dear user,\n\nYour hotel advertisement "${hotel.hotelName}" is set to expire on ${new Date(hotel.expirationDate).toLocaleDateString()}. Please consider renewing it.`;
         
         // Send email notification
-        await sendEmail(hotel.email, emailSubject, emailText);
+        await sendEmail(hotel.email, emailSubject, emailBody);
       }
   
       console.log(`Sent notifications for ${soonToExpireHotels.length} hotels expiring soon.`);
@@ -94,9 +127,9 @@ cron.schedule('0 0,12 * * *', async () => {
         for (let promoCode of expiredPromoCodes) {
           // Send email to the user informing them that their promo code has expired
           const emailSubject = 'Promo Code Expired';
-          const emailText = `Dear user,\n\nYour promo code ${promoCode.code} has expired on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
+          const emailBody = `Dear user,\n\nYour promo code ${promoCode.code} has expired on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
   
-          await sendEmail(promoCode.email, emailSubject, emailText);
+          await sendEmail(promoCode.email, emailSubject, emailBody);
   
           await promoCode.save();
         }
@@ -123,9 +156,9 @@ cron.schedule('0 0,12 * * *', async () => {
         for (let promoCode of soonToExpirePromoCodes) {
           // Send email to the user informing them that their promo code is about to expire
           const emailSubject = 'Promo Code Expiring Soon';
-          const emailText = `Dear user,\n\nYour promo code ${promoCode.code} is expiring soon on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
+          const emailBody = `Dear user,\n\nYour promo code ${promoCode.code} is expiring soon on ${promoCode.expirationDate.toDateString()}.\n\nThank you!`;
   
-          await sendEmail(promoCode.email, emailSubject, emailText);
+          await sendEmail(promoCode.email, emailSubject, emailBody);
         }
       }
     } catch (error) {
@@ -146,9 +179,9 @@ cron.schedule('0 0,12 * * *', async () => {
         if (expiredRides.length > 0) {
             for (let ride of expiredRides) {
                 const emailSubject = 'Your Ride Advertisement Has Expired';
-                const emailText = `Dear user,\n\nYour ride advertisement for vehicle ${ride.vehicleID} has expired on ${ride.expirationDate.toDateString()}.\n\nPlease renew your advertisement or contact support for more information.`;
+                const emailBody = `Dear user,\n\nYour ride advertisement for vehicle ${ride.vehicleID} has expired on ${ride.expirationDate.toDateString()}.\n\nPlease renew your advertisement or contact support for more information.`;
 
-                await sendEmail(ride.email, emailSubject, emailText);
+                await sendEmail(ride.email, emailSubject, emailBody);
 
                 await ride.save();
             }
@@ -180,10 +213,10 @@ cron.schedule('0 0,12 * * *', async () => {
         if (soonToExpireMonthlyRides.length > 0) {
             for (let ride of soonToExpireMonthlyRides) {
                 const emailSubject = 'Your Monthly Ride Advertisement is Expiring Soon';
-                const emailText = `Dear user,\n\nYour monthly ride advertisement for vehicle ${ride.vehicleID} is expiring soon on ${new Date(ride.expirationDate).toDateString()}.\n\nPlease renew your advertisement or contact support for more details.\n\nThank you for using our service!`;
+                const emailBody = `Dear user,\n\nYour monthly ride advertisement for vehicle ${ride.vehicleID} is expiring soon on ${new Date(ride.expirationDate).toDateString()}.\n\nPlease renew your advertisement or contact support for more details.\n\nThank you for using our service!`;
 
                 // Send the email notification
-                await sendEmail(ride.email, emailSubject, emailText);
+                await sendEmail(ride.email, emailSubject, emailBody);
             }
         }
 
@@ -205,8 +238,8 @@ cron.schedule('0 0,12 * * *', async () => { // Every day at midnight
   
         emailsToSend.forEach(async (email) => {
           const emailSubject = 'Expired Vehicle Notifications';
-          const emailText = `Dear user,\n\nYour vehicle ad(s) have expired. Please check your account for further details.\n\nThank you!`;
-          await sendEmail(email, emailSubject, emailText);
+          const emailBody = `Dear user,\n\nYour vehicle ad(s) have expired. Please check your account for further details.\n\nThank you!`;
+          await sendEmail(email, emailSubject, emailBody);
         });
   
         console.log(`Expired vehicle notifications sent to ${emailsToSend.length} users.`);
@@ -228,8 +261,8 @@ cron.schedule('0 0,12 * * *', async () => { // Every day at midnight
   
         emailsToSend.forEach(async (email) => {
           const emailSubject = 'Vehicle Expiration Reminder';
-          const emailText = `Dear user,\n\nYour vehicle ad(s) are about to expire within the next 3 days. Please take necessary actions to extend their validity.\n\nThank you!`;
-          await sendEmail(email, emailSubject, emailText);
+          const emailBody = `Dear user,\n\nYour vehicle ad(s) are about to expire within the next 3 days. Please take necessary actions to extend their validity.\n\nThank you!`;
+          await sendEmail(email, emailSubject, emailBody);
         });
   
         console.log(`Soon expiring vehicle notifications sent to ${emailsToSend.length} users.`);
@@ -251,8 +284,8 @@ cron.schedule('0 0,12 * * *', async () => {
         if (expiredGuides.length > 0) {
             for (let guide of expiredGuides) {
                 const emailSubject = 'Your Travel Partner Subscription Has Expired';
-                const emailText = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
-                await sendEmail(guide.email, emailSubject, emailText);
+                const emailBody = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
+                await sendEmail(guide.email, emailSubject, emailBody);
             }
         }
 
@@ -277,8 +310,8 @@ cron.schedule('0 0,12 * * *', async () => {
         if (soonToExpireGuides.length > 0) {
             for (let guide of soonToExpireGuides) {
                 const emailSubject = 'Your Travel Partner Subscription is Expiring Soon';
-                const emailText = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
-                await sendEmail(guide.email, emailSubject, emailText);
+                const emailBody = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
+                await sendEmail(guide.email, emailSubject, emailBody);
             }
         }
 
@@ -300,8 +333,8 @@ cron.schedule('0 0,12 * * *', async () => {
         if (expiredGuides.length > 0) {
             for (let guide of expiredGuides) {
                 const emailSubject = 'Your Guide Subscription Has Expired';
-                const emailText = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
-                await sendEmail(guide.email, emailSubject, emailText);
+                const emailBody = `Dear ${guide.name},\n\nYour guide subscription has expired. Please renew it to continue using our services.`;
+                await sendEmail(guide.email, emailSubject, emailBody);
             }
         }
 
@@ -326,8 +359,8 @@ cron.schedule('0 0,12 * * *', async () => {
         if (soonToExpireGuides.length > 0) {
             for (let guide of soonToExpireGuides) {
                 const emailSubject = 'Your Guide Subscription is Expiring Soon';
-                const emailText = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
-                await sendEmail(guide.email, emailSubject, emailText);
+                const emailBody = `Dear ${guide.name},\n\nYour guide subscription is set to expire on ${guide.expirationDate.toDateString()}. Please renew your subscription to continue enjoying our services.`;
+                await sendEmail(guide.email, emailSubject, emailBody);
             }
         }
 
