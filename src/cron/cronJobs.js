@@ -38,7 +38,7 @@ const sendEmail = async (to, subject, text) => {
 };
 
 // Scheduled task to check for expired hotels daily at midnight
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 0,12 * * *', async () => {
   console.log('Checking for expired hotels...');
   try {
     const currentDate = new Date();
@@ -59,7 +59,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Scheduled task to check for hotels expiring within the next 3 days
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 0,12 * * *', async () => {
     console.log('Checking for hotels expiring soon...');
     try {
       const currentDate = new Date();
@@ -83,7 +83,7 @@ cron.schedule('0 0 * * *', async () => {
   });
 
   // Cron job to send emails for expired promo codes
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 0,12 * * *', async () => {
     try {
       console.log('Running daily expired promo code check...');
   
@@ -107,7 +107,7 @@ cron.schedule('0 0 * * *', async () => {
   });
   
   // Cron job to send emails for promo codes expiring within 3 days
-  cron.schedule('0 0 * * *', async () => {
+  cron.schedule('0 0,12 * * *', async () => {
     try {
       console.log('Running daily soon-to-expire promo code check...');
   
@@ -135,7 +135,7 @@ cron.schedule('0 0 * * *', async () => {
 
 
   // Cron job to send emails when real-time advertisements expire
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 0,12 * * *', async () => {
     try {
         console.log('Checking for expired real-time advertisements...');
 
@@ -161,7 +161,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Cron job to send emails for real-time advertisements expiring within 3 days and where DailyOrMonth = 'Monthly'
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 0,12 * * *', async () => {
     try {
         console.log('Running daily check for soon-to-expire Monthly ride advertisements...');
 
@@ -194,7 +194,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Cron job for sending email notifications for expired vehicles
-cron.schedule('0 0 * * *', async () => { // Every day at midnight
+cron.schedule('0 0,12 * * *', async () => { // Every day at midnight
     try {
       const expiredVehicles = await vehicleDetails.find({
         expirationDate: { $lt: new Date() }
@@ -217,7 +217,7 @@ cron.schedule('0 0 * * *', async () => { // Every day at midnight
   });
   
   // Cron job for sending email notifications for vehicles expiring soon (within 3 days)
-  cron.schedule('0 0 * * *', async () => { // Every day at midnight
+  cron.schedule('0 0,12 * * *', async () => { // Every day at midnight
     try {
       const soonExpiringVehicles = await vehicleDetails.find({
         expirationDate: { $gte: new Date(), $lt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) } // Expiring within 3 days
@@ -241,7 +241,7 @@ cron.schedule('0 0 * * *', async () => { // Every day at midnight
 
 
   // Cron job to send emails when partner' subscriptions have expired
-cron.schedule('0 0 * * *', async () => { 
+cron.schedule('0 0,12 * * *', async () => { 
     try {
         console.log('Checking for expired guides...');
         const expiredGuides = await Partner.find({
@@ -263,7 +263,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Cron job to send reminder emails for partner expiring within 3 days
-cron.schedule('0 0 * * *', async () => { 
+cron.schedule('0 0,12 * * *', async () => { 
     try {
         console.log('Checking for guides expiring within 3 days...');
         const currentDate = new Date();
@@ -290,7 +290,7 @@ cron.schedule('0 0 * * *', async () => {
 
 
   // Cron job to send emails when Guider' subscriptions have expired
-  cron.schedule('0 0 * * *', async () => { 
+  cron.schedule('0 0,12 * * *', async () => { 
     try {
         console.log('Checking for expired guides...');
         const expiredGuides = await Guider.find({
@@ -312,7 +312,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Cron job to send reminder emails for Guider expiring within 3 days
-cron.schedule('0 0 * * *', async () => { 
+cron.schedule('0 0,12 * * *', async () => { 
     try {
         console.log('Checking for guides expiring within 3 days...');
         const currentDate = new Date();
