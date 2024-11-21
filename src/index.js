@@ -87,6 +87,10 @@ app.use('/collection', collectionRouter);
 const PaymentRouter = require('./routes/PaymentRoutes.js');
 app.use('/paymentrequest', PaymentRouter);
 
+//free promocode Request Router
+const FreePromocodeRouter = require('./routes/promoCodeRequestRoutes');
+app.use('/FreeProcodeReq', FreePromocodeRouter);
+
 const initialize = async () => {
     try {
       await mongoose.connect(process.env.MONGO_CONNECT_URL);

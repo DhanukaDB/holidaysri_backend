@@ -1,10 +1,13 @@
 const express = require('express');
-const { generatePromoCode, applyPromoCode, saveEarnings, createOrder, getOrders, reactivatePromoCode, viewEarnings, deleteAndSaveEarns, viewArchived, checkExistingPromoCode, updatePromoCodeExpiration } = require('../controllers/promoCodeController');
+const { generatePromoCode, applyPromoCode, saveEarnings, createOrder, getOrders, reactivatePromoCode, viewEarnings, deleteAndSaveEarns, viewArchived, checkExistingPromoCode, updatePromoCodeExpiration, generateFreePromoCode } = require('../controllers/promoCodeController');
 
 const router = express.Router();
 
 // Generate promo code
 router.post("/generate-promo-code", generatePromoCode);
+
+// Generate free code
+router.post("/generate-Free-promo-code", generateFreePromoCode);
 
 // Apply promo code
 router.post("/apply-promo-code", applyPromoCode);

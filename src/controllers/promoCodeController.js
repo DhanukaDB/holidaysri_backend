@@ -27,12 +27,14 @@ exports.generatePromoCode = async (req, res) => {
     if (promoCode) {
       promoCode.code = generatedCode;
       promoCode.expirationDate = expirationDate;
+      promoCode.type = 'Paid';
     } else {
       // If no promo code exists, create a new one
       promoCode = new PromoCode({
         email,
         code: generatedCode,
         expirationDate,
+        type: 'Paid',
       });
     }
 
@@ -51,6 +53,57 @@ exports.generatePromoCode = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+
+// Generate free promo code
+exports.generateFreePromoCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if a promo code already exists for the provided email
+    let promoCode = await PromoCode.findOne({ email, type: 'Free' });
+
+    // If a promo code exists and hasn't expired, return it
+    if (promoCode && promoCode.expirationDate > new Date()) {
+      return res.status(200).send(promoCode);
+    }
+
+    // If no promo code exists or it has expired, generate a new one
+    const generatedCode = generatePromoCode();
+
+    // Calculate expiration date (6 months from the code generated date)
+    const expirationDate = new Date(Date.now() + 182 * 24 * 60 * 60 * 1000);
+
+    // If a promo code exists but has expired, update it with a new code and expiration date
+    if (promoCode) {
+      promoCode.code = generatedCode;
+      promoCode.expirationDate = expirationDate;
+    } else {
+      // If no promo code exists, create a new one with type "Free"
+      promoCode = new PromoCode({
+        email,
+        code: generatedCode,
+        expirationDate,
+        type: 'Free', // Set type to "Free"
+      });
+    }
+
+    // Save the promo code (new or updated)
+    await promoCode.save();
+
+    // Send email notification to the user
+    const emailSubject = 'Your Free Promo Code';
+    const emailText = `Dear user,\n\nYour free promo code is: ${generatedCode}.\n\nIt will expire on ${expirationDate.toDateString()}.\n\nThank you!`;
+
+    // Call the function to send the email
+    await sendEmail(email, emailSubject, emailText);
+
+    res.status(201).send(promoCode);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 
 // Apply promo code
 exports.applyPromoCode = async (req, res) => {
