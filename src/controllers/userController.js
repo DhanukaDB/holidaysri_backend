@@ -183,3 +183,111 @@ exports.resetPassword = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+
+
+// Update contactNumber and countryCode by Email
+exports.updateContactDetails = async (req, res) => {
+  try {
+    const { email } = req.params; // Email passed in as a route parameter
+    const { contactNumber, countryCode } = req.body; // New details from the request body
+
+    // Check if both fields are provided
+    if (!contactNumber || !countryCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Both contactNumber and countryCode are required",
+      });
+    }
+
+    // Find user by email and update the fields
+    const updatedUser = await User.findOneAndUpdate(
+      { email }, // Filter: find the user by email
+      { $set: { contactNumber, countryCode } }, // Update the fields
+      { new: true, runValidators: true } // Options: return updated document and run schema validations
+    );
+
+    // If no user found
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided email",
+      });
+    }
+
+    // Success response
+    res.status(200).json({
+      success: true,
+      message: "Contact details updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating contact details:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+};
+
+// Exported function to find user by email
+exports.findUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.params; // Extract email from route parameters
+
+    // Validate email
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    // Find user by email (exclude password using projection)
+    const user = await User.findOne({ email }).select("-password -__v");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Return all user fields (password excluded)
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error finding user by email:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+exports.updateUserProfileByEmail = async (req, res) => {
+  const { email } = req.params; // Extract email from URL parameters
+  const updateData = req.body;  // Extract fields to update from request body
+
+  try {
+    // Find the user by email and update their profile
+    const updatedUser = await User.findOneAndUpdate(
+      { email },             // Filter to find user by email
+      { $set: updateData },  // Update fields with provided data
+      { new: true, runValidators: true } // Return updated document and run validators
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided email.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    res.status(500).json({
+      success: false,
+      error: "An error occurred while updating the profile. Please try again later.",
+    });
+  }
+};

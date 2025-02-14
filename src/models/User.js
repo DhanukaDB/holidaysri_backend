@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   subscription: {
     type:String,
-    default: "regular",
+    default: "regular", // this fro commercial Partners
   },
   role: {
     type: String,
@@ -22,8 +22,10 @@ const UserSchema = new Schema({
     required: true, // Corrected from "require"
   },
   contactNumber: {
-    type: Number,
-    required: true, // Corrected from "require"
+    type: String,
+  },
+  countryCode: {
+    type: String,
   },
   isSubscribed: {
     type: String,
@@ -35,6 +37,55 @@ const UserSchema = new Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+
+  isAdvertiser: {
+    type: String,
+    default: 'false',
+  },
+  isAgent: {
+    type: String,
+    default: 'false',
+  },
+  isGuider: {
+    type: String,
+    default: 'false',
+  },
+  isPartner: {
+    type: String,
+    default: 'false',
+  },
+  ProfilePicture: {
+    type: String,
+    default: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1734344642/pngtree-vector-edit-profile-icon-png-image_780604-removebg-preview_mxn5im.webp", // Default can be an empty string or a placeholder URL
+  },
+  RegisterType: {
+    type: String,
+    required: true,
+  },
+  AditionalContact: {
+    type: String,
+    default: "",
+  },
+  recidentAddress: {
+    type: String,
+    default: "",
+  },
+  shippingAddress: {
+    type: String,
+    default: "",
+  },
+  NicOrPassport: {
+    type: String,
+    default: "",
+  },
+  Country: {
+    type: String,
+    default: "",
+  },
+  ProfileStatus: {
+    type: String,
+    default: "notCompleted",
+  },
 }, {
   timestamps: true // Enable timestamps
 });

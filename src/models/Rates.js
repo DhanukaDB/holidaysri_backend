@@ -51,6 +51,12 @@ const rateSchema = new Schema({
     hotelAdvertiseRate: {
         type: Number,
     },
+    hotelAdvertismentEarnRateNew: {
+        type: Number,
+    },
+    hotelRoomAditionalRoomRate: {
+        type: Number,
+    },
     packageAdvertiseRate: {
         type: Number,
     },
@@ -120,6 +126,62 @@ const rateSchema = new Schema({
     promoCodeForeignEarnRate: {
         type: Number,
     },
+    //new
+    diamondPromocodeRate: {
+        type: Number,
+    },
+    diamondPromocodeRateForeign: {
+        type: Number,
+    },
+    goldPromocodeRate: {
+        type: Number,
+    },
+    goldPromocodeRateForeign: {
+        type: Number,
+    },
+    silverPromocodeRate: {
+        type: Number,
+    },
+    silverPromocodeRateForeign: {
+        type: Number,
+    },
+    allPromocodeDiscountRate: {
+        type: Number,
+    },
+    diamondPromocodeEarnRate: {
+        type: Number,
+    },
+    goldPromocodeEarnRate: {
+        type: Number,
+    },
+    silverPromocodeEarnRate: {
+        type: Number,
+    },
+    freePromocodeEarnRate: {
+        type: Number,
+    },
+    specialPromocodeEarnRate: {
+        type: Number,
+    },
+    specialPromocodeDiscountRate: {
+        type: Number,
+    },
+    HSCRate: {
+        type: Number,
+    },
+    HSCRateForeign: {
+        type: Number,
+    },
+    HSDRate: {
+        type: Number,
+    },
+    HSGRate: {
+        type: Number,
+    },
+    exchangeateUSD: {
+        type: Number,
+    },
+
 
    
 }, { timestamps: true }); // Adding { timestamps: true } here
