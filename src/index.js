@@ -6,14 +6,6 @@ const cronJobs = require('./cron/cronJobs'); // Import your cron jobs
 
 // const userRouter = require("./routes/User-routes");
 
-
-// Import backup functionality
-const { performBackup } = require('./backup.js');
-// Import deleting expired records
-const { deleteOldRecords } = require('./expiration.js');
-// Import deleting expired live ride records
-const { deleteExpiredRecords } = require('./realtimeExpire.js');
-
 const app = express();
 
 // Enable CORS requests from origin
@@ -29,10 +21,10 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authenticationRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/guide', require('./routes/guideRoutes'));
-app.use('/api/partner', require('./routes/partnerRoutes'));
-app.use('/api/agent', require('./routes/agentRoutes'));
-app.use('/api/seller', require('./routes/sellerRoutes'));
+// app.use('/api/guide', require('./routes/guideRoutes'));
+// app.use('/api/partner', require('./routes/partnerRoutes'));
+// app.use('/api/agent', require('./routes/agentRoutes'));
+// app.use('/api/seller', require('./routes/sellerRoutes'));
 //app.use('/api/vehicle', require('./routes/vehicleRouter'));
 
 //product router
@@ -67,10 +59,6 @@ app.use("/localPackage", localPackageRouter);
 const hotelRouter = require("./routes/hotelRoutes.js");
 app.use("/hotel", hotelRouter);
 
-//Rates Router
-const rateRouter = require("./routes/rateRoutes.js");
-app.use("/rate", rateRouter);
-
 //RealTime Router
 const realTimeRouter = require("./routes/realTimeRoutes.js");
 app.use("/realTime", realTimeRouter);
@@ -91,6 +79,76 @@ app.use('/paymentrequest', PaymentRouter);
 const FreePromocodeRouter = require('./routes/promoCodeRequestRoutes');
 app.use('/FreeProcodeReq', FreePromocodeRouter);
 
+
+
+// new
+
+
+
+//Coins router
+const CoinsRouter = require("./routes/coinRoutes.js");
+app.use("/coin", CoinsRouter);
+
+//Diamonds router
+const DiamondsRouter = require("./routes/diamondRoutes");
+app.use("/diamond", DiamondsRouter);
+
+//Diamonds router
+const GemsRouter = require("./routes/gemRoutes.js");
+app.use("/gem", GemsRouter);
+
+//Tokens router
+const TokensRouter = require("./routes/tokenRoutes.js");
+app.use("/token", TokensRouter);
+
+//Vouchers router
+const VouchersRouter = require("./routes/voucherRoutes.js");
+app.use("/voucher", VouchersRouter);
+
+//RewardPoints router
+const RewardPointsRouter = require("./routes/rewrdPointRoutes.js");
+app.use("/reward", RewardPointsRouter);
+
+//TimeCurrency router
+const TimeCurrencyRouter = require("./routes/timeCurrencyRoutes.js");
+app.use("/TimeCurrency", TimeCurrencyRouter);
+
+//Gifts router
+const GiftsRouter = require("./routes/giftRoutes.js");
+app.use("/gift", GiftsRouter);
+
+//Rates Router
+const rateRouter = require("./routes/rateRoutes.js");
+app.use("/rate", rateRouter);
+
+//new promocodes Router
+const promocodeRouter = require("./routes/newPromocodeRoutes.js");
+app.use("/newPromocodes", promocodeRouter);
+
+// Friends Router
+const friendsRouter = require("./routes/friendsRoutes.js");
+app.use("/friends", friendsRouter);
+
+// Favorites Router
+const favoritesRouter = require("./routes/favoritesRoutes");
+app.use("/favorites", favoritesRouter);
+
+// Earnings Router
+const earnsRouter = require("./routes/earningsRoutes.js");
+app.use("/earnings", earnsRouter);
+
+// Payment Activity Router
+const paymentActivityRouter = require("./routes/paymentActivityRoutes");
+app.use("/paymentAct", paymentActivityRouter);
+
+// All Favorite Router
+const allFavoriteRouter = require("./routes/allFavoriteRoutes");
+app.use("/allfavorite", allFavoriteRouter);
+
+// save List Router
+const saveListrRouter = require("./routes/saveListRoutes");
+app.use("/saveList", saveListrRouter);
+
 const initialize = async () => {
     try {
       await mongoose.connect(process.env.MONGO_CONNECT_URL);
@@ -105,14 +163,6 @@ const initialize = async () => {
     app.listen(process.env.PORT || 8000);
     console.log('Server started');
 
-    // Optionally, run the backup immediately on server start
-    performBackup();
-
-    // Ensure the deletion script is also started
-    deleteOldRecords();
-
-    // Ensure the live ride deletion script is also started
-    deleteExpiredRecords();
   };
   
   startServer();

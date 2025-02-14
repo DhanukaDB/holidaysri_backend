@@ -4,6 +4,21 @@ const Guide = require("../models/Guide");
 const Partner = require("../models/Partner");
 const Agent = require("../models/Agent");
 const Seller = require("../models/Seller");
+const Coin = require("../models/Coins");
+const diamond = require("../models/diamond");
+const gem = require("../models/gems");
+const hsToken = require("../models/tokens");
+const voucher = require("../models/voucher");
+const gift = require("../models/gift");
+const rewards = require("../models/rewardPoints");
+const timeCurrency = require("../models/timeCurency");
+const friends = require("../models/friends");
+const favorites = require("../models/favorites");
+const allFavorites = require("../models/AllFavorite");
+const notifications = require("../models/notifications");
+const cart = require("../models/cart");
+const bankDetails = require("../models/bankDetails");
+const saveList = require("../models/saveList");
 
 const nodemailer = require('nodemailer');
 
@@ -35,34 +50,153 @@ const sendEmail = async (to, subject, message) => {
   }
 };
 
+
+// Register User 
+
 exports.registerUser = async (req, res, next) => {
-  const { subscription,role,name, email, contactNumber, password } = req.body;
- 
+  const { subscription, role, name, email, contactNumber,countryCode, password, RegisterType } = req.body;
+
   try {
+    // Define additional role-based fields as strings
+    let isAgent = "False";
+    let isAdvertiser = "False";
+    let isGuider = "False";
+    let isPartner = "False";
+
+    // Set role-specific flags
+    switch (role) {
+      case "Agent":
+        isAgent = "True";
+        break;
+      case "Advertiser":
+        isAdvertiser = "True";
+        break;
+      case "Tour Guider":
+        isGuider = "True";
+        break;
+      case "Travel Partner":
+        isPartner = "True";
+        break;
+      default:
+        break;
+    }
+
+    // Create user with additional fields
     const user = await User.create({
       subscription,
       role,
       name,
       email,
       contactNumber,
+      countryCode,
       password,
+      isAgent,
+      isAdvertiser,
+      isGuider,
+      isPartner,
+      RegisterType,
     });
+
+    // Save email and initial coins in Coin database
+    await Coin.create({
+      email: email,
+      coins: 0, // Initial coin allocation
+    });
+
+    await diamond.create({
+      email: email,
+      diamonds: 0, // Initial coin allocation
+    });
+
+    await gem.create({
+      email: email,
+      freeGems: 100, // Initial coin allocation
+      ActualGems: 0,
+    });
+
+    await hsToken.create({
+      email: email,
+    });
+
+    await voucher.create({
+      email: email,
+      vouchers: 0, // Initial coin allocation
+    });
+
+    await gift.create({
+      email: email,
+      gifts: 0, // Initial coin allocation
+    });
+
+    await rewards.create({
+      email: email,
+      points: 0, // Initial coin allocation
+    });
+
+    await timeCurrency.create({
+      email: email,
+      timeCurencys: {
+        hours: 24, // Pass hours
+        minutes: 30, // Pass minutes
+      },
+    });
+
+    await friends.create({
+      email: email, // Initial friends allocation
+    });
+
+    await favorites.create({
+      email: email, // Initial favorites allocation
+    });
+
+    await notifications.create({
+      email: email, // Initial notifications allocation
+    });
+
+    await allFavorites.create({
+      email: email, // Initial All Favorite  allocation
+    });
+
+    await cart.create({
+      email: email, // Initial cart allocation
+    });
+
+    await bankDetails.create({
+      email: email, // Initial bank Details allocation
+    });
+
+    await saveList.create({
+      email: email, // Initial save List allocation
+    });
+    
+
+    // Send token for successful registration
     sendToken(user, 200, res);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: "User registration failed. Please try again later.",
-    });
+    console.error("Error during user registration:", error);
+
+    // If user creation succeeds but coin creation fails, ensure consistency
+    if (error.code === 11000) {
+      res.status(400).json({
+        success: false,
+        error: "User already exists or duplicate email.",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: "User registration failed. Please try again later.",
+      });
+    }
   }
 };
 
 exports.registerAdmin = async (req, res, next) => {
-  const { email, phoneno, password } = req.body;
+  const { email, contactNumber, password } = req.body;
 
   try {
     const admin = await Admin.create({
       email,
-      phoneno,
+      contactNumber,
       password,
     });
     sendToken2(admin, 201, res);

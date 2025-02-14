@@ -14,7 +14,15 @@ const locationSchema = new Schema({
     distanceFromColombo: {
         type: String,
     },
-    
+    climate: {
+        type: String,
+    },
+    map: {
+        type: String,
+    },
+    locationType: {
+        type: String,
+    },
     images: {
         type: [String], // Array of strings to store image URLs
         validate: {
@@ -30,6 +38,24 @@ const locationSchema = new Schema({
     backgroundImage: {
         type: String,
     },
+    ratings: [{
+        userEmail: {
+            type: String,
+        },
+        rating: {
+            type: Number, 
+            min: 1, // Rating should be between 1 and 5
+            max: 5,
+        }
+    }],
+    feedback: [{
+        userEmail: {
+            type: String,
+        },
+        comment: {
+            type: String, 
+        }
+    }]
 });
 
 const Location = mongoose.model("Location", locationSchema);

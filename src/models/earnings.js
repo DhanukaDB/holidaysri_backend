@@ -2,7 +2,11 @@
 const mongoose = require('mongoose');
 
 const earningSchema = new mongoose.Schema({
-  email: {
+  buyeremail: {
+    type: String,
+    required: true,
+  },
+  category: {
     type: String,
     required: true,
   },
@@ -13,6 +17,18 @@ const earningSchema = new mongoose.Schema({
   promoCode: {
     type: String,
     required: true,
+  },
+  promoCodeOwner: {
+    type: String,
+    required: true,
+  },
+  item: {
+    type: String,
+    required: true,
+  },
+  withdrawed: {
+    type: String,
+    default: "no", // Default value set to "no"
   },
 }, { timestamps: true });
 

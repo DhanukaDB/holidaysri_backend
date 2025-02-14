@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const {addNewLocation,viewLocations,viewOneLocation, updateLocation,deleteLocation} = require ('../controllers/LocationController.js')
+const {addNewLocation,viewLocations,viewOneLocation, updateLocation,deleteLocation, addFeedback, addRating } = require ('../controllers/LocationController.js')
 
 //add new Location 
 router.post("/add", addNewLocation);
@@ -16,6 +16,12 @@ router.get("/", viewLocations);
 
 //view one Location
 router.get("/get/:id", viewOneLocation);
+
+//add new comment 
+router.post("/:id/feedback", addFeedback);
+
+//add new rating 
+router.post("/:id/rating", addRating);
 
 
 

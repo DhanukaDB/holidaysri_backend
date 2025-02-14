@@ -1,6 +1,6 @@
 const rateDetails = require("../models/Rates.js");
 
-//add new Vehicle for system
+//add rates for system
 exports.addRate= async (req, res) => {
  
     //constant variables for the attributes
@@ -44,6 +44,26 @@ exports.addRate= async (req, res) => {
     partnerForeignEarnRate,
     promoCodeLocalEarnRate,
     promoCodeForeignEarnRate,
+    diamondPromocodeRate,
+    diamondPromocodeRateForeign,
+    goldPromocodeRate,
+    goldPromocodeRateForeign,
+    silverPromocodeRate,
+    silverPromocodeRateForeign,
+    allPromocodeDiscountRate,
+    HSCRate,
+    HSCRateForeign,
+    HSDRate,
+    HSGRate,
+    diamondPromocodeEarnRate,
+    goldPromocodeEarnRate,
+    silverPromocodeEarnRate,
+    freePromocodeEarnRate,
+    specialPromocodeEarnRate,
+    specialPromocodeDiscountRate,
+    exchangeateUSD,
+    hotelRoomAditionalRoomRate,
+    
      } = req.body;
   
   
@@ -93,6 +113,26 @@ exports.addRate= async (req, res) => {
     partnerForeignEarnRate,
     promoCodeLocalEarnRate,
     promoCodeForeignEarnRate,
+    diamondPromocodeRate,
+    diamondPromocodeRateForeign,
+    goldPromocodeRate,
+    goldPromocodeRateForeign,
+    silverPromocodeRate,
+    silverPromocodeRateForeign,
+    allPromocodeDiscountRate,
+    HSCRate,
+    HSCRateForeign,
+    HSDRate,
+    HSGRate,
+    diamondPromocodeEarnRate,
+    goldPromocodeEarnRate,
+    silverPromocodeEarnRate,
+    freePromocodeEarnRate,
+    specialPromocodeEarnRate,
+    specialPromocodeDiscountRate,
+    exchangeateUSD,
+    hotelRoomAditionalRoomRate,
+
         })
     
         newRate.save().then(() => {
@@ -161,6 +201,26 @@ exports.deleteRate = async (req, res) => {
     partnerForeignEarnRate,
     promoCodeLocalEarnRate,
     promoCodeForeignEarnRate,
+    diamondPromocodeRate,
+    diamondPromocodeRateForeign,
+    goldPromocodeRate,
+    goldPromocodeRateForeign,
+    silverPromocodeRate,
+    silverPromocodeRateForeign,
+    allPromocodeDiscountRate,
+    HSCRate,
+    HSCRateForeign,
+    HSDRate,
+    HSGRate,
+    diamondPromocodeEarnRate,
+    goldPromocodeEarnRate,
+    silverPromocodeEarnRate,
+    freePromocodeEarnRate,
+    specialPromocodeEarnRate,
+    specialPromocodeDiscountRate,
+    exchangeateUSD,
+    hotelRoomAditionalRoomRate,
+
            } = req.body;
   
     const updateRate = {
@@ -203,6 +263,26 @@ exports.deleteRate = async (req, res) => {
     partnerForeignEarnRate,
     promoCodeLocalEarnRate,
     promoCodeForeignEarnRate,
+    diamondPromocodeRate,
+    diamondPromocodeRateForeign,
+    goldPromocodeRate,
+    goldPromocodeRateForeign,
+    silverPromocodeRate,
+    silverPromocodeRateForeign,
+    allPromocodeDiscountRate,
+    HSCRate,
+    HSCRateForeign,
+    HSDRate,
+    HSGRate,
+    diamondPromocodeEarnRate,
+    goldPromocodeEarnRate,
+    silverPromocodeEarnRate,
+    freePromocodeEarnRate,
+    specialPromocodeEarnRate,
+    specialPromocodeDiscountRate,
+    exchangeateUSD,
+    hotelRoomAditionalRoomRate,
+
     }
   
   
@@ -226,14 +306,13 @@ exports.viewRates= async (req, res) => {
   })
   
   }
+
   //view one
-  exports.viewOneRate = async (req, res) => {
-    
+exports.viewOneRate = async (req, res) => {
     let rateID = req.params.id;
     const rate = await rateDetails.findById(rateID).then((rate) => {
-        res.status(200).send({status: "  fetched", rate})
-    }).catch(() => {
-        
-         res.status(500).send({status:"Error with get " , error: err.message})
-    })
-  }
+        res.status(200).send({ status: "fetched", rate });
+    }).catch((err) => {
+        res.status(500).send({ status: "Error with get", error: err.message });
+    });
+}
