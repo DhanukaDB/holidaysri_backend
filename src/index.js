@@ -10,7 +10,7 @@ const app = express();
 
 // Enable CORS requests from origin
 app.use(cors({
-  origin: ["http://localhost:5173", "https://holidaysri.com"]
+  origin: ["http://localhost:5173", "https://holidaysri.com", "https://holidaysri-new-frontend-p5qq73jrs-kavindu-j22s-projects.vercel.app"]
 }));
 
 app.options('*', cors()); // This will enable preflight requests for all routes
