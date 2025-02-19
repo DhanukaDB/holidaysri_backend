@@ -9,8 +9,15 @@ const cronJobs = require('./cron/cronJobs'); // Import your cron jobs
 const app = express();
 
 // Enable CORS requests from origin
+// app.use(cors({
+//   origin: ["http://localhost:5173", "https://holidaysri.com", "https://holidaysri-new-frontend.vercel.app"]
+// }));
+
+// Enable CORS requests before defining any routes
 app.use(cors({
-  origin: ["http://localhost:5173", "https://holidaysri.com", "https://holidaysri-new-frontend.vercel.app"]
+  origin: ["http://localhost:5173", "https://holidaysri.com", "https://holidaysri-new-frontend.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.options('*', cors()); // This will enable preflight requests for all routes
