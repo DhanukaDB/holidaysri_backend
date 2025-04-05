@@ -27,20 +27,20 @@ const paymentActivitySchema = new mongoose.Schema({
     },
     discountedAmount: {
         type: Number,
-        
     },
     promoCode: {
         type: String,
-        
     },
     promoCodeOwner: {
         type: String,
-        
     },
     forEarns: {
         type: Number,
-        
     },
+    currency: {
+        type: String,
+        default: 'HSC'
+    }
 }, { timestamps: true });
 
 const PaymentActivity = mongoose.model('PaymentActivity', paymentActivitySchema);
