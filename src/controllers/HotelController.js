@@ -37,44 +37,87 @@ const createEmailContent = (subject, body) => {
 
 // Add new hotel and send email
 exports.addNewHotel = async (req, res) => {
-  const {
-    hotelName, category, email, location, description, price, images, googleMap, whatsappNumber, fb, contactNumber, webUrl,
-    fullboardPrice, halfboardPrice, liquor, smoke, roomType, roomCapacity, parking, internet, bbqFacilities, chef, activities, cctv, promoCode
-  } = req.body;
-
-  const expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
-
   try {
-    // Check if hotel already exists
-    const savedHotel = await Hotel.findOne({ hotelName });
-    
-    if (savedHotel) {
-      return res.status(400).json({ error: "Hotel with this name already exists" });
-    }
+    // Extract hotel data from request body
+    const hotelData = req.body;
 
-    // Create new hotel
+    // Create new hotel instance
     const newHotel = new Hotel({
-      hotelName, category, email, location, description, price, images, googleMap, whatsappNumber, fb, contactNumber, webUrl,
-      fullboardPrice, halfboardPrice, liquor, smoke, roomType, roomCapacity, parking, internet, bbqFacilities, chef, activities, cctv,
-      expirationDate, promoCode
+      hotelName: hotelData.hotelName,
+      userEmail: hotelData.userEmail,
+      category: hotelData.category,
+      description: hotelData.description,
+      climate: hotelData.climate,
+      location: {
+        address: hotelData.location.address,
+        city: hotelData.location.city,
+        province: hotelData.location.province,
+        mapUrl: hotelData.location.mapUrl,
+      },
+      contactInfo: {
+        email: hotelData.contactInfo.email,
+        contactNumber: hotelData.contactInfo.contactNumber,
+        whatsappNumber: hotelData.contactInfo.whatsappNumber,
+        facebookUrl: hotelData.contactInfo.facebookUrl,
+        websiteUrl: hotelData.contactInfo.websiteUrl,
+      },
+      rooms: hotelData.rooms || [],
+      displayPriceMain: hotelData.displayPriceMain,
+      facilities: hotelData.facilities || {},
+      diningOptions: hotelData.diningOptions || {},
+      policies: hotelData.policies || {},
+      activities: hotelData.activities || {},
+      promoCode: hotelData.promoCode,
+      images: hotelData.images || [],
+      ratings: hotelData.ratings || [],
+      feedback: hotelData.feedback || [],
+      otherInfo: hotelData.otherInfo || [],
+      isHaveStars: hotelData.isHaveStars || false,
+      howManyStars: hotelData.howManyStars,
+      isVerified: hotelData.isVerified || false,
+      isHaveCertificate: hotelData.isHaveCertificate || false,
+      isHaveLicense: hotelData.isHaveLicense || false,
+      acceptTeams: hotelData.acceptTeams || false,
+      isOpenForAgents: hotelData.isOpenForAgents || false,
+      boostPoints: hotelData.boostPoints || 0
     });
 
-    // Save the new hotel
-    await newHotel.save();
+    // Save the new hotel to the database
+    const savedHotel = await newHotel.save();
 
-    // Send success response
-    res.json("New Hotel Added");
+    // Return success response
+    res.status(201).json({
+      success: true,
+      message: 'Hotel added successfully',
+      data: savedHotel
+    });
 
-    // Send email to the hotel owner
-    const emailSubject = "Hotel Added Successfully!";
-    const emailBody = `Dear ${hotelName},\n\nYour hotel has been successfully added to our system.\nPromo Code: ${promoCode}\nExpiration Date: ${expirationDate.toDateString()}\n\nThank you!`;
-    
-    // Call the function to send the email
-    await sendEmail(email, emailSubject, emailBody);
+  } catch (error) {
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors
+      });
+    }
 
-  } catch (err) {
-    console.error("Error adding hotel: ", err);
-    res.status(500).json({ error: "Error adding hotel", message: err.message });
+    // Handle duplicate key errors (e.g., if you add unique constraints later)
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Hotel with this information already exists'
+      });
+    }
+
+    // Handle other errors
+    console.error('Error adding hotel:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to add hotel',
+      error: error.message
+    });
   }
 };
 

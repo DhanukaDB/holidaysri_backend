@@ -13,6 +13,7 @@ exports.createPaymentActivity = async (req, res) => {
             promoCode,
             promoCodeOwner,
             forEarns,
+            currency,
         } = req.body;
 
         // Create a new payment activity
@@ -27,6 +28,7 @@ exports.createPaymentActivity = async (req, res) => {
             promoCode,         // Optional
             promoCodeOwner,    // Optional
             forEarns,
+            currency,
         });
 
         // Save the payment activity to the database
