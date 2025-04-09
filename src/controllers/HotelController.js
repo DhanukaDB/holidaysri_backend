@@ -121,6 +121,52 @@ exports.addNewHotel = async (req, res) => {
   }
 };
 
+// Add feedback to a hotel
+exports.addFeedback = async (req, res) => {
+  const hotelId = req.params.id;
+  const { userEmail, comment, forWhat } = req.body;
+
+  try {
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ status: "Hotel not found" });
+    }
+
+    // Push the new feedback to the feedback array
+    hotel.feedback.push({ userEmail, comment, forWhat });  // Changed Hotel to hotel
+
+    // Save the updated hotel
+    await hotel.save();  // Changed Hotel to hotel
+
+    res.status(200).json({ status: "Feedback added successfully", feedback: { userEmail, comment, forWhat } });
+  } catch (error) {
+    res.status(500).json({ status: "Error with adding feedback", error: error.message });
+  }
+};
+
+// Add rating to a location
+exports.addRating = async (req, res) => {
+  const hotelId = req.params.id;
+  const { userEmail, rating } = req.body;
+
+  try {
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ status: "Hotel not found" });
+    }
+
+    // Push the new rating to the feedback array
+    hotel.ratings.push({ userEmail, rating });
+
+    // Save the updated location
+    await hotel.save();
+
+    res.status(200).json({ status: "Feedback added successfully", ratings: { userEmail, rating } });
+  } catch (error) {
+    res.status(500).json({ status: "Error with adding feedback", error: error.message });
+  }
+};
+
 // delete existing one
 exports.deleteHotel = async (req, res) => {
   let hotelId = req.params.id;
