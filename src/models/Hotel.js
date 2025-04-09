@@ -65,10 +65,25 @@ const hotelSchema = new Schema(
       bookedDates: {
         type: [
           {
-            date: {
+            checkingdate: {
               type: Date
             },
+            checkOutdate: {
+              type: Date
+            },
+            RoomUnit: {
+              type: String,
+              default: ''
+            },
+            Guests: {
+              type: String,
+              default: ''
+            },
             note: {
+              type: String,
+              default: ''
+            },
+            BookingId: {
               type: String,
               default: ''
             }
@@ -84,6 +99,10 @@ const hotelSchema = new Schema(
       noOfRooms: { 
         type: Number,  
         required: true 
+      },
+      canPayAdvance: { type: Boolean },
+      advancePercentage: { 
+        type: Number 
       },
       roomOpenForAgents: { type: Boolean },
       discountForPromo : { type: Number },
