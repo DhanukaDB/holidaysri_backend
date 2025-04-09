@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const {addNewHotel,viewHotels,viewOneHotel, updateHotel,deleteHotel,viewHotelByLocation, updateHotelAddExpiration} = require ('../controllers/HotelController.js')
+const {addNewHotel,viewHotels,viewOneHotel, updateHotel,deleteHotel,viewHotelByLocation, updateHotelAddExpiration, addFeedback, addRating} = require ('../controllers/HotelController.js')
 
 //add new Hotel 
 router.post("/add", addNewHotel);
@@ -23,5 +23,10 @@ router.get("/getlocation/:locationid", viewHotelByLocation);
 // Update hotel add expiration date
 router.put("/hotel-update-expiredate", updateHotelAddExpiration);
 
+//add new comment 
+router.post("/:id/feedback", addFeedback);
+
+//add new rating 
+router.post("/:id/rating", addRating);
 
 module.exports = router;
