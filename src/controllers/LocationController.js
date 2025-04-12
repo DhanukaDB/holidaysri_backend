@@ -200,3 +200,26 @@ exports.viewRating = async (req, res) => {
     res.status(500).json({ status: "Error with fetching feedback", error: error.message });
   }
 };
+
+// location find by name
+
+exports.getLocationIdByName = async (req, res) => {
+    try {
+        const { locationName } = req.query; // Assuming locationName is passed as a query parameter
+
+        if (!locationName) {
+            return res.status(400).json({ message: 'Location name is required' });
+        }
+
+        const location = await Location.findOne({ locationName }, '_id');
+
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        res.status(200).json({ locationId: location._id });
+    } catch (error) {
+        console.error('Error fetching location ID:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
