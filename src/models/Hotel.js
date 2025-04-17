@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { v4: uuidv4 } = require('uuid');
 
 // Main Hotel Schema
 const hotelSchema = new Schema(
@@ -85,16 +86,12 @@ const hotelSchema = new Schema(
             },
             BookingId: {
               type: String,
-              default: ''
+              unique: true, // Enforce uniqueness at the schema level
+              default: () => uuidv4(), // Automatically generate a unique ID
             }
           }
         ],
         default: [],
-        validate: {
-          validator: (bookings) => 
-            bookings.every(booking => !isNaN(new Date(booking.date).getTime())),
-          message: 'Invalid date format in bookedDates array.'
-        }
       },
       noOfRooms: { 
         type: Number,  

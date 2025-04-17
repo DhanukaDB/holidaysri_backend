@@ -340,3 +340,57 @@ exports.updateHotelAddExpiration = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+  exports.addBookingToRoom = async (req, res) => {
+    try {
+      const { hotelId, roomIndex } = req.params;
+      const {
+        checkingdate,
+        checkOutdate,
+        RoomUnit,
+        Guests,
+        note,
+        BookingId
+      } = req.body;
+  
+      // Validate required fields
+      if (!checkingdate || !checkOutdate) {
+        return res.status(400).json({ message: 'Checking date and check out date are required' });
+      }
+  
+      // Find the hotel by ID
+      const hotel = await Hotel.findById(hotelId);
+      if (!hotel) {
+        return res.status(404).json({ message: 'Hotel not found' });
+      }
+  
+      // Validate room index
+      if (roomIndex < 0 || roomIndex >= hotel.rooms.length) {
+        return res.status(400).json({ message: 'Invalid room index' });
+      }
+  
+      // Create the new booked date object
+      const newBookedDate = {
+        checkingdate: new Date(checkingdate),
+        checkOutdate: new Date(checkOutdate),
+        RoomUnit: RoomUnit || '',
+        Guests: Guests || '',
+        note: note || '',
+        BookingId: BookingId || ''
+      };
+  
+      // Add the new booked date to the specified room
+      hotel.rooms[roomIndex].bookedDates.push(newBookedDate);
+  
+      // Save the updated hotel
+      const updatedHotel = await hotel.save();
+  
+      res.status(200).json({
+        message: 'Booked date added successfully',
+        hotel: updatedHotel
+      });
+    } catch (error) {
+      console.error('Error adding booked date:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  };
