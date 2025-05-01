@@ -74,7 +74,7 @@ exports.registerUser = async (req, res, next) => {
       case "Tour Guider":
         isGuider = "True";
         break;
-      case "Travel Partner":
+      case "Travel Buddy":
         isPartner = "True";
         break;
       default:
