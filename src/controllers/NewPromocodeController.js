@@ -3,7 +3,7 @@ const NewPromocode = require('../models/NewPromocode');
 
 
 exports.addPromocode = async (req, res) => {
-    const { userEmail, promocodeType, promocode } = req.body;
+    const { userEmail, promocodeType, promocode, usedPromoCode } = req.body;
 
     // Validate input
     if (!userEmail || !promocodeType || !promocode) {
@@ -22,6 +22,7 @@ exports.addPromocode = async (req, res) => {
             userEmail,
             promocodeType,
             promocode,
+            usedPromoCode,
         });
 
         // Save to the database

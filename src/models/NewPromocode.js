@@ -40,6 +40,10 @@ const newPromocodeSchema = new mongoose.Schema({
         type: String,
         default: "off"
     },
+    usedPromoCode: {
+        type: String,
+        default: " "
+    },
     boostPoints: {
         type: Number,
         default: 0
