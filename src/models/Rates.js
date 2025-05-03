@@ -181,6 +181,39 @@ const rateSchema = new Schema({
     exchangeateUSD: {
         type: Number,
     },
+    allPromocodeDiscountRateDaily: {
+        type: Number,
+    },
+    diamondPromocodeEarnRateAdsMonthly: {
+        type: Number,
+    },
+    goldPromocodeEarnRateAdsMonthly: {
+        type: Number,
+    },
+    silverPromocodeEarnRateAdsMonthly: {
+        type: Number,
+    },
+    freePromocodeEarnRateAdsMonthly: {
+        type: Number,
+    },
+    specialPromocodeEarnRateAdsMonthly: {
+        type: Number,
+    },
+    diamondPromocodeEarnRateAdsDaily: {
+        type: Number,
+    },
+    goldPromocodeEarnRateAdsDaily: {
+        type: Number,
+    },
+    silverPromocodeEarnRateAdsDaily: {
+        type: Number,
+    },
+    freePromocodeEarnRateRateAdsDaily: {
+        type: Number,
+    },
+    specialPromocodeEarnRateAdsDaily: {
+        type: Number,
+    },
 
 
    
