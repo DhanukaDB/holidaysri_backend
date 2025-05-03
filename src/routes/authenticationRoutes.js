@@ -15,7 +15,7 @@ const {
   agentLogin,
   registerSeller,
   sellerLogin,
-
+  sendOTP
 
   
 } = require("../controllers/authenticationController");
@@ -32,7 +32,8 @@ router.route("/userlogin").post(userLogin);
 // router.route("/stafflogin").post(staffLogin);
 router.route("/adminlogin").post(adminLogin);
 
-
+// OTP routes
+router.post('/send-otp',sendOTP);
 
 //router.route("/forgotpassword").post(forgotpassword);
 

@@ -50,6 +50,58 @@ const sendEmail = async (to, subject, message) => {
   }
 };
 
+// Send OTP to email
+exports.sendOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        error: "Email and OTP are required"
+      });
+    }
+
+    // Send email with OTP
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your HolidaySri Verification OTP",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+          <h2 style="color: #2e7d32; text-align: center;">HolidaySri Email Verification</h2>
+          <p style="font-size: 16px;">Hello,</p>
+          <p style="font-size: 16px;">Thank you for registering with HolidaySri. Please use the following OTP to verify your email address:</p>
+          
+          <div style="background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0; border-radius: 5px;">
+            <h1 style="color: #2e7d32; margin: 0; font-size: 28px; letter-spacing: 3px;">${otp}</h1>
+          </div>
+          
+          <p style="font-size: 16px;">This OTP is valid for 5 minutes. Please do not share it with anyone.</p>
+          <p style="font-size: 16px;">If you didn't request this OTP, please ignore this email.</p>
+          
+          <div style="margin-top: 30px; text-align: center; color: #757575; font-size: 14px;">
+            <p>© ${new Date().getFullYear()} HolidaySri. All rights reserved.</p>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({
+      success: true,
+      message: "OTP sent successfully"
+    });
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to send OTP"
+    });
+  }
+};
+
 
 // Register User 
 
