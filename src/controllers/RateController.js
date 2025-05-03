@@ -63,6 +63,17 @@ exports.addRate= async (req, res) => {
     specialPromocodeDiscountRate,
     exchangeateUSD,
     hotelRoomAditionalRoomRate,
+    allPromocodeDiscountRateDaily,
+diamondPromocodeEarnRateAdsMonthly,
+goldPromocodeEarnRateAdsMonthly,
+silverPromocodeEarnRateAdsMonthly,
+freePromocodeEarnRateAdsMonthly,
+specialPromocodeEarnRateAdsMonthly,
+diamondPromocodeEarnRateAdsDaily,
+goldPromocodeEarnRateAdsDaily,
+silverPromocodeEarnRateAdsDaily,
+freePromocodeEarnRateRateAdsDaily,
+specialPromocodeEarnRateAdsDaily,
     
      } = req.body;
   
@@ -132,6 +143,17 @@ exports.addRate= async (req, res) => {
     specialPromocodeDiscountRate,
     exchangeateUSD,
     hotelRoomAditionalRoomRate,
+    allPromocodeDiscountRateDaily,
+diamondPromocodeEarnRateAdsMonthly,
+goldPromocodeEarnRateAdsMonthly,
+silverPromocodeEarnRateAdsMonthly,
+freePromocodeEarnRateAdsMonthly,
+specialPromocodeEarnRateAdsMonthly,
+diamondPromocodeEarnRateAdsDaily,
+goldPromocodeEarnRateAdsDaily,
+silverPromocodeEarnRateAdsDaily,
+freePromocodeEarnRateRateAdsDaily,
+specialPromocodeEarnRateAdsDaily,
 
         })
     
@@ -220,6 +242,17 @@ exports.deleteRate = async (req, res) => {
     specialPromocodeDiscountRate,
     exchangeateUSD,
     hotelRoomAditionalRoomRate,
+    allPromocodeDiscountRateDaily,
+diamondPromocodeEarnRateAdsMonthly,
+goldPromocodeEarnRateAdsMonthly,
+silverPromocodeEarnRateAdsMonthly,
+freePromocodeEarnRateAdsMonthly,
+specialPromocodeEarnRateAdsMonthly,
+diamondPromocodeEarnRateAdsDaily,
+goldPromocodeEarnRateAdsDaily,
+silverPromocodeEarnRateAdsDaily,
+freePromocodeEarnRateRateAdsDaily,
+specialPromocodeEarnRateAdsDaily,
 
            } = req.body;
   
@@ -282,6 +315,17 @@ exports.deleteRate = async (req, res) => {
     specialPromocodeDiscountRate,
     exchangeateUSD,
     hotelRoomAditionalRoomRate,
+    allPromocodeDiscountRateDaily,
+diamondPromocodeEarnRateAdsMonthly,
+goldPromocodeEarnRateAdsMonthly,
+silverPromocodeEarnRateAdsMonthly,
+freePromocodeEarnRateAdsMonthly,
+specialPromocodeEarnRateAdsMonthly,
+diamondPromocodeEarnRateAdsDaily,
+goldPromocodeEarnRateAdsDaily,
+silverPromocodeEarnRateAdsDaily,
+freePromocodeEarnRateRateAdsDaily,
+specialPromocodeEarnRateAdsDaily,
 
     }
   
