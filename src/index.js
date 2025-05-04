@@ -149,6 +149,10 @@ app.use("/allfavorite", allFavoriteRouter);
 const saveListrRouter = require("./routes/saveListRoutes");
 app.use("/saveList", saveListrRouter);
 
+// save List Router
+const newFoodsRouter = require("./routes/newFoodsRoutes.js");
+app.use("/foodsNew", newFoodsRouter);
+
 const initialize = async () => {
     try {
       await mongoose.connect(process.env.MONGO_CONNECT_URL);
