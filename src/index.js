@@ -157,6 +157,9 @@ app.use("/foodsNew", newFoodsRouter);
 const newResturentRouter = require("./routes/newResturentRoutes.js");
 app.use("/resturentsNew", newResturentRouter);
 
+const newLiveRideRouter = require("./routes/newLiveRideRoutes.js");
+app.use("/lverideNew", newLiveRideRouter);
+
 const initialize = async () => {
     try {
       await mongoose.connect(process.env.MONGO_CONNECT_URL);

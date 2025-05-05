@@ -30,9 +30,6 @@ const rateSchema = new Schema({
     discountPromoCodeForeignPercentage: {
         type: Number,
     },
-    discountLiveRidePercentage: {
-        type: Number,
-    },
     discountEventPercentage: {
         type: Number,
     },

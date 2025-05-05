@@ -283,7 +283,11 @@ const hotelSchema = new Schema(
     },
       comment: {
           type: String, 
-      }
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+    }
     }],
     otherInfo: {
       type: [String],

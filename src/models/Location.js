@@ -54,6 +54,10 @@ const locationSchema = new Schema({
         },
         comment: {
             type: String, 
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
         }
     }]
 });
