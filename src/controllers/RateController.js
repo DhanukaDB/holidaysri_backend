@@ -14,7 +14,6 @@ exports.addRate= async (req, res) => {
     discountguidePercentage,
     discountPromoCodeLocalPercentage,
     discountPromoCodeForeignPercentage,
-    discountLiveRidePercentage,
     discountEventPercentage,
     discountLocalPartnerPercentage,
     discountForeignPartnerPercentage,
@@ -74,6 +73,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
     
      } = req.body;
   
@@ -94,7 +95,6 @@ specialPromocodeEarnRateAdsDaily,
     discountguidePercentage,
     discountPromoCodeLocalPercentage,
     discountPromoCodeForeignPercentage,
-    discountLiveRidePercentage,
     discountEventPercentage,
     discountLocalPartnerPercentage,
     discountForeignPartnerPercentage,
@@ -154,6 +154,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
         })
     
@@ -193,7 +195,6 @@ exports.deleteRate = async (req, res) => {
       discountguidePercentage,
       discountPromoCodeLocalPercentage,
     discountPromoCodeForeignPercentage,
-      discountLiveRidePercentage,
       discountEventPercentage,
       discountLocalPartnerPercentage,
     discountForeignPartnerPercentage,
@@ -253,6 +254,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
            } = req.body;
   
@@ -266,7 +269,6 @@ specialPromocodeEarnRateAdsDaily,
       discountguidePercentage,
       discountPromoCodeLocalPercentage,
     discountPromoCodeForeignPercentage,
-      discountLiveRidePercentage,
       discountEventPercentage,
       discountLocalPartnerPercentage,
     discountForeignPartnerPercentage,
@@ -326,6 +328,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
     }
   

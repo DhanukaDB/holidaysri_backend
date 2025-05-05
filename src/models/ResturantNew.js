@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-const foodAdvertisementSchema = new mongoose.Schema({
-  // Basic Information
-  title: {
+const restaurantSchema = new mongoose.Schema({
+  name: {
     type: String,
-    default: "Food Advertisement"
+    required: true
   },
-  foodName: {
+  categoryType: {
     type: String,
     required: true
   },
@@ -14,23 +13,10 @@ const foodAdvertisementSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  images: {
-    type: [String],
-    required: true,
-    validate: [arrayLimit, '{PATH} must have at least 1 image and maximum 4'],
-  },
-  category: {
+  images: [{
     type: String,
-    required: true,
-    enum: ['Home Made', 'Restaurant', 'Street Food', 'Bakery', 'Cafe', 'Fast Food', 'Fine Dining', 'Dessert']
-  },
-  type: {
-    type: [String],
-    required: true,
-    validate: [arrayMinLength, '{PATH} must have at least 2 types']
-  },
-  
-  // Location Information
+    required: true
+  }],
   location: {
     city: {
       type: String,
@@ -41,8 +27,6 @@ const foodAdvertisementSchema = new mongoose.Schema({
       required: true
     }
   },
-  
-  // Contact Information
   contact: {
     phone: {
       type: String,
@@ -50,43 +34,60 @@ const foodAdvertisementSchema = new mongoose.Schema({
     },
     email: String,
     facebook: String,
+    website: String,
     whatsapp: String,
-    mapUrl: String
+    mapUrl: {
+      type: String,
+      required: true
+    }
   },
-  
-  // Business Options
   delivery: {
     type: Boolean,
     default: false
-  },
-  priceRange: {
-    type: String,
-    required: true
   },
   available: {
     type: Boolean,
     default: true
   },
-  dineIn: Boolean,
-  takeAway: Boolean,
-  
-  adsTimeFrame: {
+  operatingHours: {
+    openTime: {
+      type: String,
+      required: true
+    },
+    closeTime: {
+      type: String,
+      required: true
+    }
+  },
+  diningOptions: [{
     type: String,
-    enum: ['Daily', 'Monthly'],
+    required: true
+  }],
+  menuFile: {
+    type: String,
     required: true
   },
-  // Agent Options
+  status: {
+    type: String,
+    enum: ['Active', 'Inactive', 'Temporarily Closed'],
+    default: 'Active'
+  },
   agentOptions: {
-    openForAgent: {
+    isAgentOption: {
       type: Boolean,
       default: false
     },
     discountRate: Number,
     earnRate: Number
   },
-  // Additional Fields
-  promocodeUsed: String, // Will be added in next page
-  expirationDate: Date, // Will be calculated in controller
+  promocodeUsed: {
+    type: String,
+    default: null
+  },
+  expirationDate: {
+    type: Date,
+    required: true
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -124,18 +125,12 @@ const foodAdvertisementSchema = new mongoose.Schema({
   userEmail: {
     type: String,
     required: true
-  }
+  },
+  adsTimeFrame: {
+    type: String,
+    enum: ['Monthly', 'Daily'],
+    required: true
+  },
 }, { timestamps: true });
 
-// Validator functions
-function arrayLimit(val) {
-  return val.length > 0 && val.length <= 4;
-}
-
-function arrayMinLength(val) {
-  return val.length >= 2;
-}
-
-const FoodAdvertisement = mongoose.model('FoodAdvertisement', foodAdvertisementSchema);
-
-module.exports = FoodAdvertisement;
+module.exports = mongoose.model('Restaurant', restaurantSchema);
