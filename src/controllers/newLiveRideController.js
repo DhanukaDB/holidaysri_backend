@@ -23,7 +23,8 @@ exports.createLiveRide = async (req, res) => {
             isVerified: false,
             boostPoints: 0,
             ratings: [],
-            feedback: []
+            feedback: [],
+            promocodeUsed: formData.promocode,
         };
 
         const newLiveRide = await LiveRide.create(liveRideData);
