@@ -74,6 +74,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
     
      } = req.body;
   
@@ -154,6 +156,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
         })
     
@@ -253,6 +257,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
            } = req.body;
   
@@ -326,6 +332,8 @@ goldPromocodeEarnRateAdsDaily,
 silverPromocodeEarnRateAdsDaily,
 freePromocodeEarnRateRateAdsDaily,
 specialPromocodeEarnRateAdsDaily,
+dailyRestaurantRate,
+monthlyRestaurantRate,
 
     }
   

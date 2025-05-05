@@ -214,6 +214,12 @@ const rateSchema = new Schema({
     specialPromocodeEarnRateAdsDaily: {
         type: Number,
     },
+    dailyRestaurantRate: {
+        type: Number,
+    },
+    monthlyRestaurantRate: {
+        type: Number,
+    },
 
 
    

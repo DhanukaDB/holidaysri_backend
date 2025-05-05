@@ -149,9 +149,13 @@ app.use("/allfavorite", allFavoriteRouter);
 const saveListrRouter = require("./routes/saveListRoutes");
 app.use("/saveList", saveListrRouter);
 
-// save List Router
+
 const newFoodsRouter = require("./routes/newFoodsRoutes.js");
 app.use("/foodsNew", newFoodsRouter);
+
+
+const newResturentRouter = require("./routes/newResturentRoutes.js");
+app.use("/resturentsNew", newResturentRouter);
 
 const initialize = async () => {
     try {
