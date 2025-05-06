@@ -167,7 +167,8 @@ const LiveRideSchema = new mongoose.Schema({
         type: Number
     },
     promocodeUsed: {
-        type: String
+        type: String,
+        default: null
     },
 
     // User Info

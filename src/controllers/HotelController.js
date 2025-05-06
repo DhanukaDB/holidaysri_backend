@@ -124,7 +124,7 @@ exports.addNewHotel = async (req, res) => {
 // Add feedback to a hotel
 exports.addFeedback = async (req, res) => {
   const hotelId = req.params.id;
-  const { userEmail, comment, forWhat } = req.body;
+  const { userEmail, comment, forWhat, satisfaction } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -133,12 +133,12 @@ exports.addFeedback = async (req, res) => {
     }
 
     // Push the new feedback to the feedback array
-    hotel.feedback.push({ userEmail, comment, forWhat });  // Changed Hotel to hotel
+    hotel.feedback.push({ userEmail, comment, forWhat, satisfaction });  // Changed Hotel to hotel
 
     // Save the updated hotel
     await hotel.save();  // Changed Hotel to hotel
 
-    res.status(200).json({ status: "Feedback added successfully", feedback: { userEmail, comment, forWhat } });
+    res.status(200).json({ status: "Feedback added successfully", feedback: { userEmail, comment, forWhat, satisfaction } });
   } catch (error) {
     res.status(500).json({ status: "Error with adding feedback", error: error.message });
   }

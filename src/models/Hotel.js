@@ -276,18 +276,22 @@ const hotelSchema = new Schema(
     }],
     feedback: [{
       userEmail: {
-          type: String,
+        type: String,
       },
       forWhat: {
         type: String, 
-    },
+      },
       comment: {
-          type: String, 
+        type: String, 
+      },
+      satisfaction: {
+        type: String,
+        enum: ["😍 Excellent", "😊 Good", "😐 Average", "😕 Poor", "😠 Terrible"], // predefined
       },
       createdAt: {
         type: Date,
         default: Date.now
-    }
+      }
     }],
     otherInfo: {
       type: [String],
