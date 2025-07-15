@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const  mongoose = require('mongoose');
 require("dotenv").config();
-const cronJobs = require('./cron/cronJobs'); // Import your cron jobs
 
 // const userRouter = require("./routes/User-routes");
 
@@ -27,63 +26,15 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 // app.use('/api/seller', require('./routes/sellerRoutes'));
 //app.use('/api/vehicle', require('./routes/vehicleRouter'));
 
-//product router
-const productRouter = require("./routes/productRoutes.js");
-app.use("/product", productRouter);
-
-//event router
-const eventRouter = require("./routes/eventRoutes.js");
-app.use("/event", eventRouter);
-
 //location router
 const locationRouter = require("./routes/locationRoutes.js");
 app.use("/location", locationRouter);
-
-//vehicle router
-const vehicleRouter = require("./routes/vehicleRouter.js");
-app.use("/vehicle", vehicleRouter);
-
-//promo code router
-const promoCodeRouter = require("./routes/promoCodeRouter.js");
-app.use("/promo", promoCodeRouter);
-
-//Package  router
-const packageRouter = require("./routes/packageRoutes.js");
-app.use("/package", packageRouter);
-
-//Local Package  router
-const localPackageRouter = require("./routes/localPackageRoutes.js");
-app.use("/localPackage", localPackageRouter);
 
 //Hotel router
 const hotelRouter = require("./routes/hotelRoutes.js");
 app.use("/hotel", hotelRouter);
 
-//RealTime Router
-const realTimeRouter = require("./routes/realTimeRoutes.js");
-app.use("/realTime", realTimeRouter);
-
-//Booking Router
-const bookingRouter = require("./routes/bookingRoutes.js");
-app.use("/booking", bookingRouter);
-
-//Collection Router
-const collectionRouter = require('./routes/collectionRoutes.js');
-app.use('/collection', collectionRouter);
-
-//Payment Request Router
-const PaymentRouter = require('./routes/PaymentRoutes.js');
-app.use('/paymentrequest', PaymentRouter);
-
-//free promocode Request Router
-const FreePromocodeRouter = require('./routes/promoCodeRequestRoutes');
-app.use('/FreeProcodeReq', FreePromocodeRouter);
-
-
-
 // new
-
-
 
 //Coins router
 const CoinsRouter = require("./routes/coinRoutes.js");
